@@ -91,7 +91,25 @@ abbr:where([title]) {
 /*
 Remove the default font size and weight for headings.
 */
-
+.chat-ai-box{
+  color: white;
+  background: #1e1e2eeb;
+  height: 50px;
+}
+#sumbit-ai{
+  background: #1e1e2eeb;
+  color: white;
+}
+.main-ai{
+  background: rgba(15, 19, 24, 1);
+}
+.header-ai{
+ background: #1e1e2eeb;
+ color: white;
+}
+.isi-chat-ai{
+  background: #1e1e2eeb;
+}
 h1,
 h2,
 h3,
@@ -101,7 +119,10 @@ h6 {
   font-size: inherit;
   font-weight: inherit;
 }
-
+.mt-5{
+  margin-top: 5px;
+  border-radius: 20px;
+}
 /*
 Reset links to optimize for opt-in styling instead of opt-out.
 */
@@ -595,6 +616,7 @@ video {
 
 .justify-end {
   justify-content: flex-end;
+  
 }
 
 .justify-between {
@@ -623,6 +645,12 @@ video {
 
 .whitespace-pre-wrap {
   white-space: pre-wrap;
+  width: 85%;
+  padding-left: 5px;
+  height: auto;
+  padding-bottom: 10px;
+  
+  border-radius: 20px;
 }
 
 .rounded-lg {

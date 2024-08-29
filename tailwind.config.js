@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        gemLight: "#e5f5e0",
-        gemRegular: "#a1d99b",
+        gemLight: "#1e1e2eeb",
+        gemRegular: "31a354",
         gemDeep: "#31a354",
       },
     },
