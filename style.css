@@ -644,9 +644,9 @@ video {
   display:flex;
   background: #1e1e2eeb;
   width: 80%;
-  flex-direction: row;
-  margin-right: auto;
-  border-radius: 20px 25px 25px 0px;
+  flex-direction: row-reverse;
+  margin-left: auto;
+  border-radius: 20px 25px 0px 25px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 15px;
@@ -656,6 +656,8 @@ video {
 }
 .chat-box-user p{
   margin-left: 10px;
+  text-align: left;
+  width: 90%;
 }
 .chat-box-user img{
   width: 45px;
@@ -669,9 +671,10 @@ video {
   display:flex;
   background: #1e1e2eeb;
   width: 80%;
-  flex-direction: row-reverse;
-  margin-left: auto;
-  border-radius: 25px 20px 0px 25px;
+  flex-direction: row;
+  margin-right: auto;
+
+  border-radius: 20px 25px 25px 0px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 15px;
@@ -686,7 +689,7 @@ video {
   align-items: left;
   justify-content: left;
   font-family: 'Zen Maru Gothic';
-  margin-left: auto;
+  margin-left: 15px;
   text-align: left;
 }
 .form-chat{
