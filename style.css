@@ -97,10 +97,7 @@ Remove the default font size and weight for headings.
   background: #1e1e2eeb;
   height: 50px;
 }
-#sumbit-ai{
-  background: #1e1e2eeb;
-  color: white;
-}
+
 .main-ai{
   background: rgba(15, 19, 24, 1);
 }
