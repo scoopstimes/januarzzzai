@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/chat-bot.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href='https://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Zen Maru Gothic' rel='stylesheet'>
+   <link href='https://fonts.googleapis.com/css?family=Barlow Condensed' rel='stylesheet'>
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css">  
     <title>Januarzzz Ai</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="w-full min-h-screen flex flex-col p-3">
+  <body>
     <main
       class="w-full min-h-[calc(100vh-1rem)] max-h-[calc(100vh-1rem)] flex flex-col main-ai"
     >
@@ -18,37 +22,36 @@
           alt="chatbot image"
           class="w-10 h-10 rounded-lg"
         />
-        <h1 class=" text-lg font-medium">Januarzzz Ai</h1>
+        <h1 class=" text-lg font-medium">Januarzzz ChatBot AI</h1>
       </header>
       <!-- Chat Box -->
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 overflow-y-auto" >
         <!-- Chat area -->
-        <div class="flex gap-3 justify-end mt-5">
-          <pre class="isi-chat-ai text-white prounded-md shadow-md whitespace-pre-wrap">
-            <h1>Halo! saya Januarzzz Ai siap membantu kamu dimanapun dan kapan pun! :)</h1>
-          </pre>
-          <img
-            src="chat-bot.jpg"
-            alt="user icon"
-            class="w-10 h-10 rounded-full"
-          />
-        </div>
-        <div class="p-2 flex flex-col gap-4" id="chat-container"></div>
+        <div class="p-2 flex flex-col" style="padding-bottom: 130px; gap: 20px;" id="chat-container"></div>
       </div>
       <!-- prompt -->
-      <form action="" method="post" class="p-2 h-fit" id="chat-form">
-        <textarea
+      <div class="chat-input" style="display: flex; width: 100%; margin-top: 20px;position: fixed;margin-left: -15px;justify-content: center; align-items: center;background: rgba(15, 19, 24, 1);height: 70px; 
+    bottom: 0;
+    right: 0">
+      <div style="display: flex; justify-content: center; align-items: center;height: 70px; margin-top: -10px;width: 100%;background: rgba(15, 19, 24, 1);">
+      
+      <form action="" method="post" class="form-chat" id="chat-form">
+        <input
           name="prompt"
           id="prompt"
-          cols="10"
-          rows="4"
-          class="w-full p-2 rounded-md resize-none focus:outline-none chat-ai-box"
+          type="text"
+          class="input-chat"
           placeholder="Ayo bertanya!"
-        ></textarea>
-        <button type="submit" class="w-full p-1 rounded sumbit-ai" id="sumbit-ai">
-          Kirim
+        >
+        <button type="submit" id="sumbit-ai" style=" margin-left: 15px; margin-top: -15px;">
+          <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 20px; height: 50px; background: #1e1e2eeb;">
+           <span class="mdi mdi-send" style="font-size: 35px;"></span>
+          </div>
         </button>
       </form>
+      </div>
+      </div>
+
     </main>
     <script type="module" src="/main.js"></script>
   </body>

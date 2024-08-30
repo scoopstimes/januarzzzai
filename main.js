@@ -22,11 +22,10 @@
     export const userDiv = (data) => {
       return `
       <!-- User Chat -->
-              <div class="flex items-center gap-2 justify-start">
+              <div class="chat-box-user">
                 <img
                   src="user.jpg"
                   alt="user icon"
-                  class="w-10 h-10 rounded-full"
                 />
                 <p class="isi-chat-ai text-white p-1 rounded-md shadow-md  ">
                   ${data}
@@ -39,37 +38,54 @@
     export const aiDiv = (data) => {
       return `
       <!-- AI Chat -->
-              <div class="flex gap-2 justify-end">
-                <pre class="isi-chat-ai text-white p-1 rounded-md shadow-md whitespace-pre-wrap">
-                  ${data}
-                </pre>
+              <div class="chat-box-ai">
                 <img
                   src="chat-bot.jpg"
                   alt="user icon"
-                  class="w-10 h-10 rounded-full"
                 />
+                <div class="data-chat-ai">
+                <p>
+                  ${data}
+                </p>
+                </div>
               </div>
       `;
     };
 
     async function handleSubmit(event) {
       event.preventDefault();
-
+    
       let userMessage = document.getElementById("prompt");
       const chatArea = document.getElementById("chat-container");
-
+    
       var prompt = userMessage.value.trim();
       if (prompt === "") {
         return;
       }
-
+    
       console.log("user message", prompt);
-
+     
       chatArea.innerHTML += userDiv(prompt);
       userMessage.value = "";
+
+      const typingIndicator = document.createElement("div");
+      typingIndicator.classList.add("chat-box-ai");
+      typingIndicator.innerHTML = `
+      
+        <img src="chat-bot.jpg" alt="chat bot icon"/>
+        <div class="data-chat-ai">
+    
+        <p class="typing-indicator text-gray-500 italic">Typing...</p>
+        </div>
+      `;
+      chatArea.appendChild(typingIndicator);
+    
+      chatArea.scrollTop = chatArea.scrollHeight;
       const aiResponse = await getResponse(prompt);
       let md_text = md().render(aiResponse);
+      chatArea.removeChild(typingIndicator);
       chatArea.innerHTML += aiDiv(md_text);
+      chatArea.scrollTop = chatArea.scrollHeight;
 
       let newUserRole = {
         role: "user",
@@ -79,12 +95,13 @@
         role: "model",
         parts: aiResponse,
       };
-
+    
       history.push(newUserRole);
       history.push(newAIRole);
-
+    
       console.log(history);
     }
+    
 
     const chatForm = document.getElementById("chat-form");
     chatForm.addEventListener("submit", handleSubmit);
