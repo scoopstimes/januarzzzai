@@ -643,7 +643,7 @@ video {
 .chat-box-user{
   display:flex;
   background: #1e1e2eeb;
-  width: 80%;
+  width: 90%;
   flex-direction: row-reverse;
   margin-left: auto;
   border-radius: 20px 25px 0px 25px;
@@ -670,7 +670,7 @@ video {
 .chat-box-ai{
   display:flex;
   background: #1e1e2eeb;
-  width: 80%;
+  width: 90%;
   flex-direction: row;
   margin-right: auto;
 
