@@ -102,7 +102,7 @@ Remove the default font size and weight for headings.
   background: rgba(15, 19, 24, 1);
 }
 .header-ai{
- background: #1e1e2eeb;
+ background: transparent;
  color: white;
 }
 .isi-chat-ai{
@@ -643,21 +643,23 @@ video {
 .chat-box-user{
   display:flex;
   background: #1e1e2eeb;
-  width: 90%;
-  flex-direction: row-reverse;
+  width: auto;
+  max-width: 80%;
   margin-left: auto;
-  border-radius: 20px 25px 0px 25px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
+  flex-direction: row-reverse;
+  border-radius: 30px;
+  padding-top: 15px;
+  justify-content: center;
+  padding-bottom: 15px;
+  padding-left: 15px;
   padding-right: 15px;
   align-items: center;
   border: 0.5px solid #6e6e6e80;
 }
 .chat-box-user p{
-  margin-left: 10px;
+  width: auto;
+  background: transparent;
   text-align: left;
-  width: 90%;
 }
 .chat-box-user img{
   width: 45px;
@@ -667,31 +669,7 @@ video {
   margin-bottom: auto;
   object-fit: cover;
 }
-.chat-box-ai{
-  display:flex;
-  background: #1e1e2eeb;
-  width: 90%;
-  flex-direction: row;
-  margin-right: auto;
 
-  border-radius: 20px 25px 25px 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 15px;
-  padding-right: 15px;
-  align-items: center;
-  border: 0.5px solid #6e6e6e80;
-}
-.chat-box-ai .data-chat-ai{
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: left;
-  justify-content: left;
-  font-family: 'Zen Maru Gothic';
-  margin-left: 15px;
-  text-align: left;
-}
 .form-chat{
   display: flex;
   justify-content: center;
@@ -703,8 +681,8 @@ video {
 }
 .input-chat{
   flex-grow: 1;
-  height: 50px;
-  border-radius: 10px;
+  height: 70px;
+  border-radius: 30px 0px 0px 30px;
   margin-top: -15px;
   border: none;
   outline: none;
@@ -714,20 +692,69 @@ video {
   padding: 16px;
   font-size: 16px;
 }
-.data-chat-ai p{
- 
-  color: white;
-  width: 90%;
-  font-size: 20px;
-  text-align: left;
+.chat-box-ai {
+  display: flex; /* Agar gambar dan teks berada dalam satu baris */
+  align-items: flex-start; /* Untuk menyelaraskan gambar dan teks di bagian atas */
+  margin: 15px 0; /* Menambahkan margin antar chat */
+  padding: 10px;
+  gap: 10px; /* Menambahkan jarak antar elemen di dalam chat */
 }
-.chat-box-ai img{
-  width: 45px;
+
+/* Styling gambar bot */
+.chat-box-ai img {
+  width: 45px; /* Ukuran gambar bot */
   height: 45px;
-  border-radius: 50%;
-  border: 0.8px solid #6e6e6e80;
-  margin-bottom: auto;
-  object-fit: cover;
+  border-radius: 50%; /* Membuat gambar bulat */
+  object-fit: cover; /* Memastikan gambar tetap terpotong dengan baik */
+}
+
+/* Styling untuk area data chat AI */
+.chat-box-ai .data-chat-ai {
+  max-width: 80%; /* Menyediakan ruang untuk teks */
+  display: flex;
+  flex-direction: column; /* Memastikan teks berada dalam kolom */
+  align-items: flex-start; /* Teks berada di kiri */
+  background-color: transparent; /* Warna latar belakang untuk teks */
+  padding: 12px 15px; /* Padding untuk ruang sekitar teks */
+  border-radius: 15px; /* Membuat sudut bulat pada box */ /* Menambahkan bayangan agar tampak lebih modern */
+  word-wrap: break-word; /* Mengatasi teks yang panjang agar tetap rapi */
+  line-height: 1.6; /* Meningkatkan keterbacaan teks */
+}
+
+/* Styling untuk teks di dalam data-chat-ai */
+.chat-box-ai .data-chat-ai p {
+  font-size: 1.1rem; /* Ukuran font untuk teks */
+  color: #ffffff; /* Warna teks putih */
+  margin: 0; /* Menghilangkan margin default */
+  padding: 0;
+   /* Menghilangkan padding default */
+  white-space: pre-wrap; /* Menjaga spasi dan baris baru */
+}
+
+/* Penambahan styling khusus untuk teks yang lebih penting */
+.chat-box-ai .data-chat-ai p strong {
+  font-weight: bold; /* Menebalkan teks */
+}
+
+.chat-box-ai .data-chat-ai p em {
+  font-style: italic; /* Menambahkan gaya miring pada teks */
+}
+
+.chat-box-ai .data-chat-ai p code {
+  background-color: #444;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #f1f1f1; /* Menyesuaikan warna teks untuk kode */
+}
+
+.chat-box-ai .data-chat-ai p a {
+  color: #1e90ff; /* Warna biru untuk link */
+  text-decoration: none;
+}
+
+.chat-box-ai .data-chat-ai p a:hover {
+  text-decoration: underline;
 }
 .whitespace-pre-wrap {
   white-space: pre-wrap;
