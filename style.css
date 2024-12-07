@@ -702,8 +702,8 @@ video {
 
 /* Styling gambar bot */
 .chat-box-ai img {
-  width: 45px; /* Ukuran gambar bot */
-  height: 45px;
+  width: 35px; /* Ukuran gambar bot */
+  height: 35px;
   border-radius: 50%; /* Membuat gambar bulat */
   object-fit: cover; /* Memastikan gambar tetap terpotong dengan baik */
 }
