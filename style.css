@@ -704,8 +704,10 @@ video {
 .chat-box-ai img {
   width: 40px; /* Ukuran gambar bot */
   height: 40px;
+  border: 0.8px solid #6e6e6e80;
   border-radius: 50%; /* Membuat gambar bulat */
-  object-fit: cover; /* Memastikan gambar tetap terpotong dengan baik */
+  object-fit: cover;
+   /* Memastikan gambar tetap terpotong dengan baik */
 }
 
 /* Styling untuk area data chat AI */

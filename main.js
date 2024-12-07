@@ -10,6 +10,8 @@ let history = [];
 
 // Jawaban spesifik sesuai pertanyaan
 const aiResponses = {
+  "hai": "Hai! Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "halo": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
   "kamu ai": "Ya, aku adalah AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
   "januarzzz ai": "Halo, Aku Januarzzz AI, ada yang bisa aku bantu?",
   "halo januarz ai": "Halo juga, Apa kabar nih? ada yang bisa aku bantu?",
@@ -75,7 +77,7 @@ export const userDiv = (data) => {
 export const aiDiv = (id) => {
   return `
     <div class="chat-box-ai">
-      <img src="chat-bot.jpg" alt="chat bot icon" />
+      <img src="chatbot-bg.jpeg" alt="chat bot icon" />
       <div class="data-chat-ai">
         <p id="${id}" class="text-white"></p>
       </div>
