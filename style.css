@@ -648,9 +648,9 @@ video {
   margin-left: auto;
   flex-direction: row-reverse;
   border-radius: 30px;
-  padding-top: 15px;
+  padding-top: 10px;
   justify-content: center;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   padding-left: 15px;
   padding-right: 15px;
   align-items: center;
