@@ -658,6 +658,7 @@ video {
 }
 .chat-box-user p{
   width: auto;
+  
   background: transparent;
   text-align: left;
 }
@@ -665,7 +666,6 @@ video {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  border: 0.8px solid #6e6e6e80;
   margin-bottom: auto;
   object-fit: cover;
 }
@@ -676,12 +676,12 @@ video {
   align-items: center;
   width: 90%;
   background: rgba(15, 19, 24, 1);
-  height: 70px;
+  height: 60px;
 
 }
 .input-chat{
   flex-grow: 1;
-  height: 70px;
+  height: 60px;
   border-radius: 30px 0px 0px 30px;
   margin-top: -15px;
   border: none;
@@ -695,7 +695,7 @@ video {
 .chat-box-ai {
   display: flex; /* Agar gambar dan teks berada dalam satu baris */
   align-items: flex-start; /* Untuk menyelaraskan gambar dan teks di bagian atas */
-  margin: 15px 0; /* Menambahkan margin antar chat */
+  margin: 10px 0; /* Menambahkan margin antar chat */
   padding: 10px;
   gap: 10px; /* Menambahkan jarak antar elemen di dalam chat */
 }
@@ -727,7 +727,7 @@ video {
 .chat-box-ai .data-chat-ai p {
   font-size: 1.1rem; /* Ukuran font untuk teks */
   color: #ffffff; /* Warna teks putih */
-  margin: 0; /* Menghilangkan margin default */
+  margin-top: -5px; /* Menghilangkan margin default */
   padding: 0;
    /* Menghilangkan padding default */
   white-space: pre-wrap; /* Menjaga spasi dan baris baru */

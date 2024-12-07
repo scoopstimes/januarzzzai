@@ -10,6 +10,7 @@ let history = [];
 
 // Jawaban spesifik sesuai pertanyaan
 const aiResponses = {
+  "gemini": "Halo! Saya bukan Gemini, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
   "hai": "Hai! Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
   "halo": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
   "kamu ai": "Ya, aku adalah AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
@@ -66,7 +67,7 @@ async function getResponse(prompt) {
 export const userDiv = (data) => {
   return `
     <div class="chat-box-user">
-      <p class="isi-chat-ai text-white p-1 rounded-md shadow-md">
+      <p class="isi-chat-ai text-white p-1 rounded-md">
         ${data}
       </p>
     </div>
