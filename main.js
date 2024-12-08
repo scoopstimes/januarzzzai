@@ -92,10 +92,10 @@ export const aiDiv = (id) => {
         <p id="${id}" class="text-white inline-block"></p>
         <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
         <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:15px; gap: 10px;">
-          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 25px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
-          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 25px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
-          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 25px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
-          <button class="mdi mdi-reload retry-button" id="retry-${id}" style="font-size: 25px; opacity: 0.7; margin-left: 10px;" onclick="handleRetry('${id}')"></button>
+          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
+          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
+          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
+          <button class="mdi mdi-reload retry-button" id="retry-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleRetry('${id}')"></button>
         </div>
         <div id="feedback-${id}" style="opacity: 0.5;" class="feedback-text"></div>
       </div>
