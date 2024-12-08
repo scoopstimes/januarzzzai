@@ -42,7 +42,7 @@ const aiResponses = {
 };
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
-async function displayWithDelay(element, text, delay = 300) {
+async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks dan hapus tag <p>
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
@@ -83,16 +83,111 @@ export const userDiv = (data) => {
 };
 
 // AI Chat div
+// AI Chat div
 export const aiDiv = (id) => {
   return `
     <div class="chat-box-ai">
       <img src="chatbot-bg.jpeg" alt="chat bot icon" />
       <div class="data-chat-ai">
         <p id="${id}" class="text-white inline-block"></p>
+        <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
+        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:10px; gap: 10px;">
+          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 20px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
+          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 20px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
+          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 20px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
+          <button class="mdi mdi-reload retry-button" id="retry-${id}" style="font-size: 20px; opacity: 0.7; margin-left: 10px;" onclick="handleRetry('${id}')"></button>
+        </div>
+        <div id="feedback-${id}" style="opacity: 0.5;" class="feedback-text"></div>
       </div>
     </div>
   `;
 };
+
+// Like button handler
+function handleLike(id) {
+  const likeButton = document.getElementById(`like-${id}`);
+  const dislikeButton = document.getElementById(`dislike-${id}`);
+  const feedbackDiv = document.getElementById(`feedback-${id}`);
+
+  likeButton.classList.remove("mdi-thumb-up-outline");
+  likeButton.classList.add("mdi-thumb-up");
+  dislikeButton.style.display = "none";
+
+  feedbackDiv.innerHTML = "Anda menyukai respon ini";
+}
+window.handleLike = handleLike;
+
+// Dislike button handler
+function handleDislike(id) {
+  const likeButton = document.getElementById(`like-${id}`);
+  const dislikeButton = document.getElementById(`dislike-${id}`);
+  const feedbackDiv = document.getElementById(`feedback-${id}`);
+
+  dislikeButton.classList.remove("mdi-thumb-down-outline");
+  dislikeButton.classList.add("mdi-thumb-down");
+  likeButton.style.display = "none";
+
+  feedbackDiv.innerHTML = "Anda tidak menyukai respon ini";
+}
+window.handleDislike = handleDislike;
+
+// Copy button handler
+function handleCopy(id) {
+  const responseText = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(responseText).then(() => {
+    alert("Pesan berhasil disalin!");
+  }).catch(err => {
+    alert("Gagal menyalin teks: " + err);
+  });
+}
+window.handleCopy = handleCopy;
+
+// Retry button handler
+async function handleRetry(id) {
+  const responseTextElement = document.getElementById(id);
+  const feedbackDiv = document.getElementById(`feedback-${id}`);
+  const responseButtons = document.getElementById(`response-buttons-${id}`);
+
+  // Hide the response buttons when retrying
+  responseButtons.style.display = "none";
+
+  responseTextElement.textContent = "...";
+
+  // Get the last user prompt from history
+  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
+
+  if (!userPrompt) {
+    console.error("No user prompt found for retry.");
+    return;
+  }
+
+  // Fetch the AI's response using the last prompt
+  const aiResponse = await getResponse(userPrompt);
+  await displayWithDelay(responseTextElement, aiResponse, 50);
+
+  feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
+
+  // Show the response buttons again
+  responseButtons.style.display = "block";
+
+  // Reset the "like" and "dislike" buttons to their initial state
+  const likeButton = document.getElementById(`like-${id}`);
+  const dislikeButton = document.getElementById(`dislike-${id}`);
+
+  // Ensure both buttons are visible and reset their states
+  likeButton.style.display = "inline-block";
+  dislikeButton.style.display = "inline-block";
+
+  likeButton.classList.remove("mdi-thumb-up");
+  likeButton.classList.add("mdi-thumb-up-outline");
+  dislikeButton.classList.remove("mdi-thumb-down");
+  dislikeButton.classList.add("mdi-thumb-down-outline");
+
+  // Reset feedback text
+  feedbackDiv.innerHTML = "";
+}
+
+window.handleRetry = handleRetry;
 
 // Tombol Dinamis untuk Kirim dan Hentikan Respons
 async function handleSubmit(event) {
@@ -103,7 +198,6 @@ async function handleSubmit(event) {
 
   const mode = button.getAttribute("data-mode");
   if (mode === "idle") {
-    // Ubah tombol menjadi mode merekam
     button.setAttribute("data-mode", "recording");
     buttonIcon.classList.remove("mdi-send");
     buttonIcon.classList.add("mdi-record-circle-outline");
@@ -114,7 +208,6 @@ async function handleSubmit(event) {
 
     const prompt = userMessage.value.trim();
     if (prompt === "") {
-      // Reset tombol jika input kosong
       button.setAttribute("data-mode", "idle");
       buttonIcon.classList.remove("mdi-record-circle-outline");
       buttonIcon.classList.add("mdi-send");
@@ -124,16 +217,18 @@ async function handleSubmit(event) {
     chatArea.innerHTML += userDiv(prompt);
     userMessage.value = "";
 
-    const uniqueID = `ai-response-${Date.now()}`; // ID unik untuk setiap respons
+    const uniqueID = `ai-response-${Date.now()}`;
     chatArea.innerHTML += aiDiv(uniqueID);
     chatArea.scrollTop = chatArea.scrollHeight;
 
     const aiResponse = await getResponse(prompt);
     const aiResponseElement = document.getElementById(uniqueID);
 
-    await displayWithDelay(aiResponseElement, aiResponse, 300);
+    await displayWithDelay(aiResponseElement, aiResponse, 100);
 
-    // Reset tombol ke mode idle
+    const responseButtons = document.getElementById(`response-buttons-${uniqueID}`);
+    responseButtons.style.display = "block";
+
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
     buttonIcon.classList.add("mdi-send");
@@ -141,10 +236,8 @@ async function handleSubmit(event) {
     history.push({ role: "user", parts: prompt });
     history.push({ role: "model", parts: aiResponse });
   } else if (mode === "recording") {
-    // Jika tombol ditekan kembali, hentikan respons AI
     stopAIResponse = true;
 
-    // Reset tombol ke mode idle
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
     buttonIcon.classList.add("mdi-send");
@@ -157,3 +250,4 @@ if (chatForm) {
 } else {
   console.error("chat-form element not found!");
 }
+
