@@ -214,6 +214,12 @@ async function handleSubmit(event) {
       return;
     }
 
+    // Menyembunyikan teks intro setelah pesan pertama
+    const introText = document.getElementById("intro-text");
+    if (introText) {
+      introText.style.display = "none";  // Sembunyikan intro setelah pesan pertama dikirim
+    }
+
     chatArea.innerHTML += userDiv(prompt);
     userMessage.value = "";
 
