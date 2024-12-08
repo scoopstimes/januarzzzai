@@ -707,6 +707,7 @@ video {
   border: 0.8px solid #6e6e6e80;
   border-radius: 50%; /* Membuat gambar bulat */
   object-fit: cover;
+  margin-bottom: auto;
    /* Memastikan gambar tetap terpotong dengan baik */
 }
 
@@ -714,23 +715,26 @@ video {
 .chat-box-ai .data-chat-ai {
   max-width: 80%; /* Menyediakan ruang untuk teks */
   display: flex;
-  flex-direction: column; /* Memastikan teks berada dalam kolom */
-  align-items: flex-start; /* Teks berada di kiri */
+  flex-direction: column; 
+  align-items: left;
+  justify-content: left;/* Memastikan teks berada dalam kolom */
+ /* Teks berada di kiri */
   background-color: transparent; /* Warna latar belakang untuk teks */
   padding: 12px 15px; /* Padding untuk ruang sekitar teks */
   border-radius: 15px; /* Membuat sudut bulat pada box */ /* Menambahkan bayangan agar tampak lebih modern */
-  word-wrap: break-word; /* Mengatasi teks yang panjang agar tetap rapi */
+   /* Mengatasi teks yang panjang agar tetap rapi */
   line-height: 1.6; /* Meningkatkan keterbacaan teks */
 }
 
 /* Styling untuk teks di dalam data-chat-ai */
-.chat-box-ai .data-chat-ai p {
+ .data-chat-ai p {
   font-size: 1.1rem; /* Ukuran font untuk teks */
   color: #ffffff; /* Warna teks putih */
   margin-top: -5px; /* Menghilangkan margin default */
-  padding: 0;
-   /* Menghilangkan padding default */
-  white-space: pre-wrap; /* Menjaga spasi dan baris baru */
+  white-space: normal; /* Izinkan teks melanjutkan ke baris baru jika sangat panjang */
+  word-wrap: break-word; /* Pecah kata jika terlalu panjang */
+  word-break: break-word; /* Memastikan tidak ada teks terpotong */
+  display: inline;
 }
 
 /* Penambahan styling khusus untuk teks yang lebih penting */

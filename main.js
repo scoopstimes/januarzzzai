@@ -40,13 +40,17 @@ const aiResponses = {
   "chatbot": "Chatbot adalah program komputer yang dirancang untuk mensimulasikan percakapan dengan pengguna manusia, biasanya melalui aplikasi perpesanan atau suara.",
   "artificial intelligence": "Kecerdasan buatan (Artificial Intelligence / AI) adalah cabang dari ilmu komputer yang berfokus pada pembuatan sistem yang dapat melakukan tugas yang biasanya membutuhkan kecerdasan manusia, seperti pemecahan masalah dan pembelajaran."
 };
+let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
-async function displayWithDelay(element, text, delay = 100) {
-  const formattedText = md().render(text); // Format teks menggunakan Markdown
-  element.innerHTML = ''; // Clear existing content
-  for (const word of formattedText.split(" ")) {
-    element.innerHTML += word + " ";
-    await new Promise((resolve) => setTimeout(resolve, delay)); 
+async function displayWithDelay(element, text, delay = 300) {
+  const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks dan hapus tag <p>
+  element.innerHTML = ""; // Kosongkan konten sebelumnya
+
+  const words = formattedText.split(" "); // Pisahkan teks berdasarkan kata
+  for (const word of words) {
+    if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
+    element.innerHTML += word + " "; // Tambahkan kata satu per satu
+    await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
   }
 }
 
@@ -84,39 +88,67 @@ export const aiDiv = (id) => {
     <div class="chat-box-ai">
       <img src="chatbot-bg.jpeg" alt="chat bot icon" />
       <div class="data-chat-ai">
-        <p id="${id}" class="text-white"></p>
+        <p id="${id}" class="text-white inline-block"></p>
       </div>
     </div>
   `;
 };
 
+// Tombol Dinamis untuk Kirim dan Hentikan Respons
 async function handleSubmit(event) {
   event.preventDefault();
 
-  const userMessage = document.getElementById("prompt");
-  const chatArea = document.getElementById("chat-container");
+  const button = document.getElementById("submit-ai");
+  const buttonIcon = document.getElementById("button-icon");
 
-  const prompt = userMessage.value.trim();
-  if (prompt === "") {
-    return;
+  const mode = button.getAttribute("data-mode");
+  if (mode === "idle") {
+    // Ubah tombol menjadi mode merekam
+    button.setAttribute("data-mode", "recording");
+    buttonIcon.classList.remove("mdi-send");
+    buttonIcon.classList.add("mdi-record-circle-outline");
+    stopAIResponse = false;
+
+    const userMessage = document.getElementById("prompt");
+    const chatArea = document.getElementById("chat-container");
+
+    const prompt = userMessage.value.trim();
+    if (prompt === "") {
+      // Reset tombol jika input kosong
+      button.setAttribute("data-mode", "idle");
+      buttonIcon.classList.remove("mdi-record-circle-outline");
+      buttonIcon.classList.add("mdi-send");
+      return;
+    }
+
+    chatArea.innerHTML += userDiv(prompt);
+    userMessage.value = "";
+
+    const uniqueID = `ai-response-${Date.now()}`; // ID unik untuk setiap respons
+    chatArea.innerHTML += aiDiv(uniqueID);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    const aiResponse = await getResponse(prompt);
+    const aiResponseElement = document.getElementById(uniqueID);
+
+    await displayWithDelay(aiResponseElement, aiResponse, 300);
+
+    // Reset tombol ke mode idle
+    button.setAttribute("data-mode", "idle");
+    buttonIcon.classList.remove("mdi-record-circle-outline");
+    buttonIcon.classList.add("mdi-send");
+
+    history.push({ role: "user", parts: prompt });
+    history.push({ role: "model", parts: aiResponse });
+  } else if (mode === "recording") {
+    // Jika tombol ditekan kembali, hentikan respons AI
+    stopAIResponse = true;
+
+    // Reset tombol ke mode idle
+    button.setAttribute("data-mode", "idle");
+    buttonIcon.classList.remove("mdi-record-circle-outline");
+    buttonIcon.classList.add("mdi-send");
   }
-
-  chatArea.innerHTML += userDiv(prompt);
-  userMessage.value = "";
-
-  const uniqueID = `ai-response-${Date.now()}`; // ID unik untuk setiap respons
-  chatArea.innerHTML += aiDiv(uniqueID);
-  chatArea.scrollTop = chatArea.scrollHeight;
-
-  const aiResponse = await getResponse(prompt);
-  const aiResponseElement = document.getElementById(uniqueID);
-
-  await displayWithDelay(aiResponseElement, aiResponse, 300);
-
-  chatArea.scrollTop = chatArea.scrollHeight;
-
-  history.push({ role: "user", parts: prompt });
-  history.push({ role: "model", parts: aiResponse });
 }
 
 const chatForm = document.getElementById("chat-form");
