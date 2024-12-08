@@ -720,7 +720,7 @@ video {
   justify-content: left;/* Memastikan teks berada dalam kolom */
  /* Teks berada di kiri */
   background-color: transparent; /* Warna latar belakang untuk teks */
-  padding: 12px 15px; /* Padding untuk ruang sekitar teks */
+  padding: 7px 15px; /* Padding untuk ruang sekitar teks */
   border-radius: 15px; /* Membuat sudut bulat pada box */ /* Menambahkan bayangan agar tampak lebih modern */
    /* Mengatasi teks yang panjang agar tetap rapi */
   line-height: 1.6; /* Meningkatkan keterbacaan teks */
