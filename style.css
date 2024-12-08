@@ -37,6 +37,7 @@
 
 html {
   line-height: 1.5;
+  user-select: none;
   /* 1 */
   -webkit-text-size-adjust: 100%;
   /* 2 */
