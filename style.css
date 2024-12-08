@@ -696,8 +696,8 @@ video {
 .chat-box-ai {
   display: flex; /* Agar gambar dan teks berada dalam satu baris */
   align-items: flex-start; /* Untuk menyelaraskan gambar dan teks di bagian atas */
-  margin: 10px 0; /* Menambahkan margin antar chat */
-  padding: 10px;
+  margin: 5px 0; /* Menambahkan margin antar chat */
+  padding: 5px;
   gap: 10px; /* Menambahkan jarak antar elemen di dalam chat */
 }
 
