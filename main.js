@@ -46,18 +46,18 @@ async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Pisahkan teks berdasarkan paragraf (dengan double newline atau bullet sebagai pembatas)
+  // Pisahkan teks berdasarkan paragraf (dengan double newline atau angka sebagai pembatas)
   const lines = formattedText.split("\n");
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
 
-    // Deteksi apakah baris dimulai dengan bullet point
-    const isBulletPoint = line.trim().startsWith("•");
+    // Deteksi apakah baris dimulai dengan angka (misalnya "1. perangkat wifi:")
+    const isNumberedList = /^\d+\./.test(line.trim());
 
-    // Jika baris adalah bullet point, tampilkan seluruhnya dalam satu baris
-    if (isBulletPoint) {
-      element.innerHTML += line.trim() + " "; // Menampilkan bullet point dalam satu baris
+    if (isNumberedList) {
+      // Jika baris adalah daftar bernomor, tampilkan seluruhnya dalam satu baris
+      element.innerHTML += line.trim() + " "; // Menampilkan daftar bernomor dalam satu baris
     } else {
       const words = line.split(" "); // Pisahkan line berdasarkan kata
       for (const word of words) {
@@ -67,12 +67,12 @@ async function displayWithDelay(element, text, delay = 50) {
       }
     }
 
-    // Tambahkan <br> setelah baris biasa, tidak untuk bullet point
-    if (!isBulletPoint) {
+    // Tambahkan <br> setelah baris biasa, tidak untuk daftar bernomor
+    if (!isNumberedList) {
       element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line biasa
     }
 
-    // Tunggu sebentar setelah menampilkan bullet point atau baris
+    // Tunggu sebentar setelah menampilkan daftar bernomor atau baris
     await new Promise((resolve) => setTimeout(resolve, delay));
   }
 }
