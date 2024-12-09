@@ -49,14 +49,22 @@ async function displayWithDelay(element, text, delay = 50) {
 
   // Pisahkan teks berdasarkan kata
   const words = formattedText.split(" ");
+  let currentLine = ""; // Menyimpan satu baris teks yang sedang diproses
+  
   for (const word of words) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
-    element.innerHTML += word + " "; // Tambahkan kata dalam baris yang sama
+    
+    currentLine += word + " "; // Tambahkan kata dalam baris yang sama
+
+    // Tambahkan kata ke dalam element setelah delay
+    element.innerHTML = currentLine;
     await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
   }
-    element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line
-  }
+
+  // Setelah selesai menampilkan semua kata, tambah baris baru
+  element.innerHTML += "<br>"; 
 }
+
 
 
 
