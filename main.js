@@ -89,7 +89,7 @@ export const aiDiv = (id) => {
     <div class="chat-box-ai">
       <img src="chatbot-bg.jpeg" alt="chat bot icon" />
       <div class="data-chat-ai">
-        <p id="${id}" class="text-white inline-block whitespace-pre-wrap"></p>
+        <p id="${id}" class="text-white inline-block whitespace-pre-wrap text-gemDeep p-1 rounded-md shadow-md"></p>
         <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
         <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:15px; gap: 10px;">
           <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
