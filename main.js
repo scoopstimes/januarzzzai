@@ -156,8 +156,14 @@ window.handleDislike = handleDislike;
 
 // Copy button handler
 function handleCopy(id) {
-  const responseText = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(responseText).then(() => {
+  const responseTextElement = document.getElementById(id);
+  const responseText = responseTextElement.innerHTML; // Ambil HTML konten
+
+  // Ganti <br> dengan newline (\n) dan hapus tag HTML lainnya
+  const formattedText = responseText.replace(/<br\s*\/?>/g, "\n").replace(/<\/?[^>]+(>|$)/g, "");
+
+  // Salin teks yang sudah diformat
+  navigator.clipboard.writeText(formattedText).then(() => {
     alert("Pesan berhasil disalin!");
   }).catch(err => {
     alert("Gagal menyalin teks: " + err);
