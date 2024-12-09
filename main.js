@@ -44,26 +44,33 @@ let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 50) {
   // Format teks tanpa memecah menjadi baris baru secara otomatis
-  const formattedText = md().render(text).replace(/<\/?p>/g, "").replace(/\n/g, " "); 
+  const formattedText = md().render(text).replace(/<\/?p>/g, "").replace(/\n/g, " ");
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Pisahkan teks berdasarkan kata
-  const words = formattedText.split(" ");
-  let currentLine = ""; // Menyimpan satu baris teks yang sedang diproses
-  
-  for (const word of words) {
+  // Pisahkan teks berdasarkan paragraf menggunakan \n sebagai pemisah
+  const paragraphs = formattedText.split("\n");
+
+  for (const paragraph of paragraphs) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
     
-    currentLine += word + " "; // Tambahkan kata dalam baris yang sama
+    let currentLine = ""; // Menyimpan satu baris teks yang sedang diproses
+    const words = paragraph.split(" "); // Pisahkan berdasarkan kata
 
-    // Tambahkan kata ke dalam element setelah delay
-    element.innerHTML = currentLine;
-    await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+    for (const word of words) {
+      if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
+
+      currentLine += word + " "; // Tambahkan kata dalam baris yang sama
+
+      // Tambahkan kata ke dalam element setelah delay
+      element.innerHTML = currentLine;
+      await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+    }
+
+    // Setelah selesai menampilkan satu paragraf, tambahkan baris baru
+    element.innerHTML += "<br><br>"; // Spasi antar paragraf
   }
-
-  // Setelah selesai menampilkan semua kata, tambah baris baru
-  element.innerHTML += "<br>"; 
 }
+  
 
 
 
