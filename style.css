@@ -705,7 +705,7 @@ video {
 .chat-box-ai img {
   width: 30x; /* Ukuran gambar bot */
   height: 30px;
-  border: 0.9px solid gray;
+  border: 0.7px solid gray;
   border-radius: 50%; /* Membuat gambar bulat */
   object-fit: cover;
   margin-bottom: auto;
