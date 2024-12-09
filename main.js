@@ -64,10 +64,12 @@ async function displayWithDelay(element, text, delay = 50) {
       await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
     }
 
-    element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line
+    // Jangan tambahkan <br> untuk bullet point, hanya untuk teks biasa
+    if (!isBulletPoint) {
+      element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line biasa
+    }
   }
 }
-  
 
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
