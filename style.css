@@ -717,7 +717,7 @@ video {
 }
 /* Styling untuk area data chat AI */
 .chat-box-ai .data-chat-ai {
-  max-width: 80%; /* Menyediakan ruang untuk teks */
+  max-width: 90%; /* Menyediakan ruang untuk teks */
   display: flex;
   flex-direction: column; 
   align-items: left;
@@ -735,7 +735,7 @@ video {
   font-size: 1.1rem; /* Ukuran font untuk teks */
   color: #ffffff; /* Warna teks putih */
   margin-top: 1px; /* Menghilangkan margin default */
-  white-space: normal; /* Izinkan teks melanjutkan ke baris baru jika sangat panjang */
+  white-space: nowrap; /* Izinkan teks melanjutkan ke baris baru jika sangat panjang */
   word-wrap: break-word; /* Pecah kata jika terlalu panjang */
   word-break: break-word; /* Memastikan tidak ada teks terpotong */
   display: inline-block;
