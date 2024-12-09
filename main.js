@@ -46,38 +46,23 @@ async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks dan hapus tag <p>
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Cek apakah teks memiliki elemen daftar
-  const lines = formattedText.split("\n").map((line) => line.trim());
-  let isList = false;
+  // Pisahkan teks berdasarkan paragraf (pisahkan dengan dua newline)
+  const paragraphs = formattedText.split("\n\n");
 
-  if (
-    lines.some(
-      (line) =>
-        line.startsWith("•") ||
-        line.startsWith("-") ||
-        /^\d+\./.test(line) // Deteksi format list numerik
-    )
-  ) {
-    isList = true;
-    element.innerHTML += "<ul>"; // Mulai elemen daftar tidak terurut
-  }
+  for (let i = 0; i < paragraphs.length; i++) {
+    if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
+    const paragraph = paragraphs[i];
+    const words = paragraph.split(" "); // Pisahkan paragraf berdasarkan kata
 
-  for (const line of lines) {
-    if (stopAIResponse) break;
+    // Tambahkan nomor paragraf
+    element.innerHTML += `<strong>${i + 1}. </strong>`; // Tambahkan nomor di awal paragraf
 
-    if (isList) {
-      // Jika elemen daftar, tambahkan sebagai item
-      element.innerHTML += `<li>${line.replace(/^[•-]\s*/, "").replace(/^\d+\.\s*/, "")}</li>`;
-    } else {
-      // Jika bukan daftar, tambahkan sebagai paragraf
-      element.innerHTML += `<p>${line}</p>`;
+    for (const word of words) {
+      if (stopAIResponse) break;
+      element.innerHTML += word + " "; // Tambahkan kata satu per satu
+      await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
     }
-
-    await new Promise((resolve) => setTimeout(resolve, delay)); // Tambahkan jeda antara teks
-  }
-
-  if (isList) {
-    element.innerHTML += "</ul>"; // Tutup elemen daftar
+    element.innerHTML += "<br><br>"; // Tambahkan spasi antar paragraf
   }
 }
 
