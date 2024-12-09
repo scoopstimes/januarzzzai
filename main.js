@@ -110,7 +110,7 @@ export const userDiv = (data) => {
 export const aiDiv = (id) => {
   return `
     <div class="chat-box-ai">
-      <img src="chatbot-bg.jpeg" alt="chat bot icon" />
+      <img src="chatbot.png" alt="chat bot icon" />
       <div class="data-chat-ai">
         <p id="${id}" class="text-white"></p>
         <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
