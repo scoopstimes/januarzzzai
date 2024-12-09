@@ -49,13 +49,9 @@ async function displayWithDelay(element, text, delay = 50) {
   // Pisahkan teks berdasarkan paragraf (pisahkan dengan dua newline)
   const paragraphs = formattedText.split("\n\n");
 
-  for (let i = 0; i < paragraphs.length; i++) {
+  for (const paragraph of paragraphs) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
-    const paragraph = paragraphs[i];
     const words = paragraph.split(" "); // Pisahkan paragraf berdasarkan kata
-
-    // Tambahkan nomor paragraf
-    element.innerHTML += `<strong>${i + 1}. </strong>`; // Tambahkan nomor di awal paragraf
 
     for (const word of words) {
       if (stopAIResponse) break;
@@ -65,6 +61,7 @@ async function displayWithDelay(element, text, delay = 50) {
     element.innerHTML += "<br><br>"; // Tambahkan spasi antar paragraf
   }
 }
+
 
 
 async function getResponse(prompt) {
