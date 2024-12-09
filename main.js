@@ -46,13 +46,41 @@ async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks dan hapus tag <p>
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  const words = formattedText.split(" "); // Pisahkan teks berdasarkan kata
-  for (const word of words) {
-    if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
-    element.innerHTML += word + " "; // Tambahkan kata satu per satu
-    await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+  // Cek apakah teks memiliki elemen daftar
+  const lines = formattedText.split("\n").map((line) => line.trim());
+  let isList = false;
+
+  if (
+    lines.some(
+      (line) =>
+        line.startsWith("•") ||
+        line.startsWith("-") ||
+        /^\d+\./.test(line) // Deteksi format list numerik
+    )
+  ) {
+    isList = true;
+    element.innerHTML += "<ul>"; // Mulai elemen daftar tidak terurut
+  }
+
+  for (const line of lines) {
+    if (stopAIResponse) break;
+
+    if (isList) {
+      // Jika elemen daftar, tambahkan sebagai item
+      element.innerHTML += `<li>${line.replace(/^[•-]\s*/, "").replace(/^\d+\.\s*/, "")}</li>`;
+    } else {
+      // Jika bukan daftar, tambahkan sebagai paragraf
+      element.innerHTML += `<p>${line}</p>`;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, delay)); // Tambahkan jeda antara teks
+  }
+
+  if (isList) {
+    element.innerHTML += "</ul>"; // Tutup elemen daftar
   }
 }
+
 
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
@@ -89,7 +117,7 @@ export const aiDiv = (id) => {
     <div class="chat-box-ai">
       <img src="chatbot-bg.jpeg" alt="chat bot icon" />
       <div class="data-chat-ai">
-        <p id="${id}" class="text-white inline-block whitespace-pre-wrap text-gemDeep p-1 rounded-md shadow-md"></p>
+        <p id="${id}" class="text-white"></p>
         <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
         <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:15px; gap: 10px;">
           <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
