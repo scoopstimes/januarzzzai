@@ -738,7 +738,7 @@ video {
   white-space: normal; /* Izinkan teks melanjutkan ke baris baru jika sangat panjang */
   word-wrap: break-word; /* Pecah kata jika terlalu panjang */
   word-break: break-word; /* Memastikan tidak ada teks terpotong */
-  display: inline;
+  display: inline-block;
 }
 
 /* Penambahan styling khusus untuk teks yang lebih penting */
