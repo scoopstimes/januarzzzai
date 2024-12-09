@@ -734,7 +734,7 @@ video {
  .data-chat-ai p {
   font-size: 1.1rem; /* Ukuran font untuk teks */
   color: #ffffff; /* Warna teks putih */
-  margin-top: -5px; /* Menghilangkan margin default */
+  margin-top: -7px; /* Menghilangkan margin default */
   white-space: normal; /* Izinkan teks melanjutkan ke baris baru jika sangat panjang */
   word-wrap: break-word; /* Pecah kata jika terlalu panjang */
   word-break: break-word; /* Memastikan tidak ada teks terpotong */
