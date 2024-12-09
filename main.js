@@ -52,7 +52,12 @@ async function displayWithDelay(element, text, delay = 50) {
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
 
-    const words = line.split(" "); // Pisahkan line berdasarkan kata
+    // Deteksi apakah baris dimulai dengan bullet point
+    const isBulletPoint = line.trim().startsWith("•");
+
+    // Jika baris adalah bullet point, kita pastikan '•' dan kata setelahnya tetap dalam satu baris
+    const words = isBulletPoint ? [line.trim()] : line.split(" "); 
+
     for (const word of words) {
       if (stopAIResponse) break;
       element.innerHTML += word + " "; // Tambahkan kata satu per satu dalam baris yang sama
@@ -63,7 +68,6 @@ async function displayWithDelay(element, text, delay = 50) {
   }
 }
   
-
 
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
