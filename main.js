@@ -55,19 +55,25 @@ async function displayWithDelay(element, text, delay = 50) {
     // Deteksi apakah baris dimulai dengan bullet point
     const isBulletPoint = line.trim().startsWith("•");
 
-    // Jika baris adalah bullet point, kita pastikan '•' dan kata setelahnya tetap dalam satu baris
-    const words = isBulletPoint ? [line.trim()] : line.split(" "); 
-
-    for (const word of words) {
-      if (stopAIResponse) break;
-      element.innerHTML += word + " "; // Tambahkan kata satu per satu dalam baris yang sama
-      await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+    // Jika baris adalah bullet point, tampilkan seluruhnya dalam satu baris
+    if (isBulletPoint) {
+      element.innerHTML += line.trim() + " "; // Menampilkan bullet point dalam satu baris
+    } else {
+      const words = line.split(" "); // Pisahkan line berdasarkan kata
+      for (const word of words) {
+        if (stopAIResponse) break;
+        element.innerHTML += word + " "; // Tambahkan kata satu per satu dalam baris yang sama
+        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+      }
     }
 
-    // Jangan tambahkan <br> untuk bullet point, hanya untuk teks biasa
+    // Tambahkan <br> setelah baris biasa, tidak untuk bullet point
     if (!isBulletPoint) {
       element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line biasa
     }
+
+    // Tunggu sebentar setelah menampilkan bullet point atau baris
+    await new Promise((resolve) => setTimeout(resolve, delay));
   }
 }
 
