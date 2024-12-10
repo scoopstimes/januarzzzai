@@ -708,6 +708,11 @@ video {
   font-size: 1.1rem; /* Ukuran font */
   color: #ffffff; /* Warna teks putih */
 }
+.chat-box-ai .data-chat-ai ul li::marker,
+.chat-box-ai .data-chat-ai ol li::marker {
+  font-size: 1.3rem; /* Ukuran font marker (bullet/nomor) */
+  color: #ffffff; /* Warna bullets/nomor */
+}
 .input-chat{
   flex-grow: 1;
   height: 50px;
