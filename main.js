@@ -40,12 +40,8 @@ const aiResponses = {
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 50) {
-  chatArea.innerHTML += userDiv(prompt);
-  userMessage.value = "";
-  const aiResponse = await getResponse(prompt);
-  let md_text = md().render(aiResponse);
-  chatArea.innerHTML += aiDiv(md_text);
-// Format teks tanpa <p> tag
+  const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
+  element.innerHTML = ""; //p> tag
    // Kosongkan konten sebelumnya
 
   // Pisahkan teks berdasarkan paragraf (dengan double newline atau angka sebagai pembatas)
