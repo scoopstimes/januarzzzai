@@ -16,11 +16,15 @@ const replacements = {
 };
 
 function replaceKeywords(response) {
-  let modifiedResponse = response;
-  for (const [target, replacement] of Object.entries(replacements)) {
-    const regex = new RegExp(`\\b${target}\\b`, "gi"); // \b memastikan hanya mengganti kata utuh
-    modifiedResponse = modifiedResponse.replace(regex, replacement);
-  }
+  // Ganti kata "Google" menjadi "Januar Adhi Nugroho"
+  let modifiedResponse = response.replace(/Google/g, "Januar Adhi Nugroho");
+
+  // Hilangkan pernyataan negatif seperti "saya bukan"
+  modifiedResponse = modifiedResponse.replace(/saya bukan ([^.]+)\./gi, "Saya adalah $1.");
+
+  // Pastikan nama sesuai jika AI menyebutkan dirinya
+  modifiedResponse = modifiedResponse.replace(/saya adalah ([^.]+)\./gi, "Saya adalah Januarzzz AI.");
+
   return modifiedResponse;
 }
 
