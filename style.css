@@ -71,7 +71,19 @@ body {
 2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
 3. Ensure horizontal rules are visible by default.
 */
+/* CSS untuk daftar berpoin/bernomor */
+div[data-role="chat-container"] div {
+  display: block;
+  white-space: nowrap; /* Mencegah pemotongan baris */
+  margin-bottom: 8px;
+  font-size: 14px;
+}
 
+/* Gaya umum untuk daftar */
+div[data-role="chat-container"] div span {
+  display: inline; /* Pastikan daftar tetap dalam satu baris */
+  font-weight: normal;
+}
 hr {
   height: 0;
   /* 1 */
