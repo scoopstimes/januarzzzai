@@ -20,10 +20,18 @@ function replaceKeywords(response) {
   let modifiedResponse = response.replace(/Google/g, "Januar Adhi Nugroho");
 
   // Hilangkan pernyataan negatif seperti "saya bukan"
-  modifiedResponse = modifiedResponse.replace(/saya bukan ([^.]+)\./gi, "Saya adalah $1.");
+  modifiedResponse = modifiedResponse.replace(
+    /\bsaya bukan ([^.]+)\./gi,
+    (_, match) => `Saya adalah ${match.trim()}.`
+  );
 
   // Pastikan nama sesuai jika AI menyebutkan dirinya
-  modifiedResponse = modifiedResponse.replace(/saya adalah ([^.]+)\./gi, "Saya adalah Januarzzz AI.");
+  if (!/Januarzzz AI/i.test(modifiedResponse)) {
+    modifiedResponse = modifiedResponse.replace(
+      /\bsaya adalah ([^.]+)\./gi,
+      (_, match) => `Saya adalah Januarzzz AI.`
+    );
+  }
 
   return modifiedResponse;
 }
