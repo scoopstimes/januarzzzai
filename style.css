@@ -694,27 +694,39 @@ video {
 }
 .chat-box-ai .data-chat-ai ul, 
 .chat-box-ai .data-chat-ai ol {
-  display: flex; /* Agar daftar ditampilkan dalam satu baris */
+  display: flex; /* Menyusun elemen dalam satu baris */
   flex-wrap: wrap; /* Membungkus elemen dalam baris jika terlalu panjang */
-  list-style-position: inside; /* Memastikan bullet berada di dalam elemen */
   padding-left: 0; /* Menghapus padding kiri default dari daftar */
   margin: 0; /* Menghapus margin default */
+  list-style-type: none; /* Menghapus bullet atau nomor default */
 }
 
 .chat-box-ai .data-chat-ai li {
   font-size: 1.1rem; /* Ukuran font */
   color: #ffffff; /* Warna teks putih */
   margin-right: 15px; /* Memberikan jarak antar item */
-  margin-bottom: 0; /* Menghapus jarak bawah antar item */
+  margin-bottom: 0; /* Menghapus margin bawah antar item */
   display: inline-flex; /* Menjadikan setiap item dalam satu baris */
   align-items: center; /* Menyelaraskan teks dan bullet secara vertikal */
 }
 
-.chat-box-ai .data-chat-ai ul li::marker,
-.chat-box-ai .data-chat-ai ol li::marker {
-  font-size: 1.3rem; /* Ukuran font marker (bullet/nomor) */
-  color: #ffffff; /* Warna bullets/nomor */
-  margin-right: 5px; /* Memberikan sedikit jarak antara marker dan teks */
+.chat-box-ai .data-chat-ai ul li::before, 
+.chat-box-ai .data-chat-ai ol li::before {
+  content: ''; /* Membuat konten baru untuk bullet atau nomor */
+  display: inline-block;
+  width: 10px; /* Ukuran bullet */
+  height: 10px; /* Ukuran bullet */
+  border-radius: 50%; /* Membuat bullet bulat */
+  background-color: #ffffff; /* Warna bullet */
+  margin-right: 5px; /* Memberikan jarak antara bullet dan teks */
+}
+
+.chat-box-ai .data-chat-ai ol li {
+  counter-increment: list-item;
+}
+
+.chat-box-ai .data-chat-ai ol li::before {
+  content: counter(list-item) '.'; /* Menambahkan nomor pada ordered list */
 }
 .input-chat{
   flex-grow: 1;
