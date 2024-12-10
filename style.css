@@ -707,7 +707,7 @@ video {
   margin-bottom: 8px; /* Memberikan jarak antar baris jika wrapping terjadi */
   font-size: 1.1rem; /* Ukuran font */
   color: #ffffff; /* Warna teks putih */
-}
+
 .input-chat{
   flex-grow: 1;
   height: 50px;
