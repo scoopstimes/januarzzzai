@@ -40,6 +40,7 @@ const aiResponses = {
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 50) {
+async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
@@ -51,15 +52,15 @@ async function displayWithDelay(element, text, delay = 50) {
 
     const trimmedLine = line.trim();
 
-    // Deteksi apakah baris adalah daftar berpoin (dimulai dengan "•") atau bernomor ("1.")
+    // Deteksi apakah baris adalah daftar berpoin atau bernomor
     const isBulletList = trimmedLine.startsWith("•");
     const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
-      // Tampilkan daftar berpoin atau bernomor langsung dalam satu baris
-      element.innerHTML += `<div>${trimmedLine}</div>`;
+      // Render daftar berpoin/bernomor dengan satu elemen div tanpa delay
+      element.innerHTML += `<div style="margin-bottom: 8px;">${trimmedLine}</div>`;
     } else {
-      // Jika bukan daftar, tampilkan kata per kata dengan delay
+      // Render baris biasa kata per kata dengan delay
       const words = trimmedLine.split(" ");
       for (const word of words) {
         if (stopAIResponse) break;
