@@ -692,6 +692,22 @@ video {
   height: 60px;
 
 }
+.chat-box-ai .data-chat-ai ul, 
+.chat-box-ai .data-chat-ai ol {
+  display: flex; /* Agar daftar ditampilkan dalam satu baris */
+  flex-wrap: wrap; /* Membungkus elemen dalam baris jika terlalu panjang */
+  list-style-type: none; /* Menghapus gaya default bullet/nomor */
+  padding-left: 0; /* Menghapus padding default */
+  margin: 0; /* Menghapus margin default */
+}
+
+.chat-box-ai .data-chat-ai li {
+  display: inline-block; /* Menampilkan setiap item dalam satu baris */
+  margin-right: 15px; /* Memberikan jarak antar item */
+  margin-bottom: 8px; /* Memberikan jarak antar baris jika wrapping terjadi */
+  font-size: 1.1rem; /* Ukuran font */
+  color: #ffffff; /* Warna teks putih */
+}
 .input-chat{
   flex-grow: 1;
   height: 50px;
