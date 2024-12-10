@@ -785,7 +785,7 @@ video {
 .data-chat-ai p {
   font-size: 1.1rem; /* Ukuran teks */
   color: #ffffff; /* Warna teks putih */
-  margin: 0; /* Menghilangkan margin bawaan */
+  margin-top: -7px; /* Menghilangkan margin bawaan */
   white-space: pre-wrap; /* Memungkinkan teks melanjutkan ke baris baru */
   display: block; /* Memastikan elemen tetap dalam baris */
 }
