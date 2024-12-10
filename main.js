@@ -63,12 +63,12 @@ async function displayWithDelay(element, text, delay = 50) {
       if (!isInList) {
         isInList = true;
         listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
-        element.innerHTML += `<${listType} style="list-style-position: outside; padding-left: 20px;">`; // Mulai tag list
+        element.innerHTML += `<${listType} style="padding-left: 20px; list-style-position: outside; margin: 0;">`; // Mulai tag list
       }
 
       // Render item daftar
       const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim(); // Hapus bullet atau nomor dan trim text
-      element.innerHTML += `<li>${listItem}</li>`; // Tambahkan item list
+      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
     } else {
       // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
       if (isInList) {
@@ -92,7 +92,6 @@ async function displayWithDelay(element, text, delay = 50) {
     element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
   }
 }
-
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
