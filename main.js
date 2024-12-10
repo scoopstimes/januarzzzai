@@ -30,6 +30,9 @@ function replaceKeywords(response) {
     modifiedResponse = `Saya adalah Januarzzz AI. ${modifiedResponse}`;
   }
 
+  // Jika sudah ada kalimat "Saya adalah Januarzzz AI" sebelumnya, hapus duplikatnya
+  modifiedResponse = modifiedResponse.replace(/Saya adalah Januarzzz AI\./i, "");
+
   return modifiedResponse;
 }
 // Fungsi untuk mendapatkan respons AI
