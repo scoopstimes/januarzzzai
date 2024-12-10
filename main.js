@@ -39,7 +39,7 @@ const aiResponses = {
 };
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
-async function displayWithDelay(element, text, delay = 50) {
+async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
@@ -274,7 +274,7 @@ async function handleSubmit(event) {
     const aiResponse = await getResponse(prompt);
     const aiResponseElement = document.getElementById(uniqueID);
 
-    await displayWithDelay(aiResponseElement, aiResponse, 100);
+    await displayWithDelay(aiResponseElement, aiResponse, 30);
 
     const responseButtons = document.getElementById(`response-buttons-${uniqueID}`);
     responseButtons.style.display = "block";
