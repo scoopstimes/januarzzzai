@@ -63,7 +63,7 @@ async function displayWithDelay(element, text, delay = 50) {
       if (!isInList) {
         isInList = true;
         listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
-        element.innerHTML += `<${listType} style="padding-left: 20px; list-style-position: outside; margin: 0;">`; // Mulai tag list
+        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`; // Mulai tag list
       }
 
       // Render item daftar
