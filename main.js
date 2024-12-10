@@ -40,12 +40,14 @@ const aiResponses = {
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 50) {
-async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
   // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
+
+  let isInList = false; // Untuk menandakan apakah sedang berada di dalam list
+  let listType = ''; // Jenis list, apakah unordered ('•') atau ordered ('1.')
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
@@ -57,9 +59,23 @@ async function displayWithDelay(element, text, delay = 50) {
     const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
-      // Render daftar berpoin/bernomor dengan satu elemen div tanpa delay
-      element.innerHTML += `<div style="margin-bottom: 8px;">${trimmedLine}</div>`;
+      // Jika belum berada dalam list, mulai membuat list
+      if (!isInList) {
+        isInList = true;
+        listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
+        element.innerHTML += `<${listType}>`; // Mulai tag list
+      }
+
+      // Render item daftar
+      const listItem = trimmedLine.replace(/^[•\d+\.]/, "").trim(); // Hapus bullet atau nomor dan trim text
+      element.innerHTML += `<li>${listItem}</li>`; // Tambahkan item list
     } else {
+      // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
+      if (isInList) {
+        isInList = false;
+        element.innerHTML += `</${listType}>`; // Tutup tag list
+      }
+
       // Render baris biasa kata per kata dengan delay
       const words = trimmedLine.split(" ");
       for (const word of words) {
@@ -69,6 +85,11 @@ async function displayWithDelay(element, text, delay = 50) {
       }
       element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
     }
+  }
+
+  // Jika masih dalam list setelah loop, tutup list
+  if (isInList) {
+    element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
   }
 }
 
