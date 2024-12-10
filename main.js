@@ -36,9 +36,6 @@ const aiResponses = {
   "terima kasih": "sama sama, jika perlu bantuan tanya aku saja!",
   "terima kasih januarzzz ai": "sama sama, jika perlu lagi bantuan tanya aku saja!",
   "terima kasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
-  "machine learning": "Machine learning adalah cabang dari kecerdasan buatan (AI) yang memungkinkan sistem untuk belajar dari data dan pengalaman tanpa perlu diprogram secara eksplisit.",
-  "chatbot": "Chatbot adalah program komputer yang dirancang untuk mensimulasikan percakapan dengan pengguna manusia, biasanya melalui aplikasi perpesanan atau suara.",
-  "artificial intelligence": "Kecerdasan buatan (Artificial Intelligence / AI) adalah cabang dari ilmu komputer yang berfokus pada pembuatan sistem yang dapat melakukan tugas yang biasanya membutuhkan kecerdasan manusia, seperti pemecahan masalah dan pembelajaran."
 };
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
