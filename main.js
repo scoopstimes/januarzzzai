@@ -16,22 +16,24 @@ const replacements = {
 };
 
 function replaceKeywords(response) {
-  // Ganti kata "Google" menjadi "Januar Adhi Nugroho"
+  // Ganti "Google" dengan "Januar Adhi Nugroho"
   let modifiedResponse = response.replace(/Google/g, "Januar Adhi Nugroho");
 
-  // Hilangkan pernyataan negatif seperti "saya bukan"
-  modifiedResponse = modifiedResponse.replace(
-    /\bsaya bukan ([^.]+)\./gi,
-    (_, match) => `Saya adalah ${match.trim()}.`
-  );
+  // Hapus referensi yang tidak diinginkan seperti "Gemini"
+  modifiedResponse = modifiedResponse.replace(/Gemini/g, "Januarzzz AI");
 
-  // Pastikan "Saya adalah Januarzzz AI" hanya muncul sekali
+  // Hapus kalimat yang menyebutkan "Saya adalah Gemini" atau yang mirip
+  modifiedResponse = modifiedResponse.replace(/\bsaya adalah ([^.]+)\./gi, (_, match) => {
+    if (match.toLowerCase().includes("gemini")) {
+      return `Saya adalah Januarzzz AI.`;
+    }
+    return `Saya adalah ${match.trim()}.`;
+  });
+
+  // Pastikan hanya ada satu "Saya adalah Januarzzz AI"
   if (!/Saya adalah Januarzzz AI\./i.test(modifiedResponse)) {
     modifiedResponse = `Saya adalah Januarzzz AI. ${modifiedResponse}`;
   }
-
-  // Jika sudah ada kalimat "Saya adalah Januarzzz AI" sebelumnya, hapus duplikatnya
-  modifiedResponse = modifiedResponse.replace(/Saya adalah Januarzzz AI\./i, "");
 
   return modifiedResponse;
 }
