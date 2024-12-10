@@ -25,17 +25,13 @@ function replaceKeywords(response) {
     (_, match) => `Saya adalah ${match.trim()}.`
   );
 
-  // Pastikan hanya satu pernyataan "Saya adalah Januarzzz AI"
+  // Pastikan "Saya adalah Januarzzz AI" hanya muncul sekali
   if (!/Saya adalah Januarzzz AI\./i.test(modifiedResponse)) {
-    modifiedResponse = modifiedResponse.replace(
-      /saya adalah ([^.]+)\./gi,
-      () => `Saya adalah Januarzzz AI.`
-    );
+    modifiedResponse = `Saya adalah Januarzzz AI. ${modifiedResponse}`;
   }
 
   return modifiedResponse;
 }
-
 // Fungsi untuk mendapatkan respons AI
 async function getResponse(prompt) {
   const chat = await model.startChat({ history });
