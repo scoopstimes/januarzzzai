@@ -692,42 +692,40 @@ video {
   height: 60px;
 
 }
+/* Pengaturan untuk ul dan ol */
 .chat-box-ai .data-chat-ai ul, 
 .chat-box-ai .data-chat-ai ol {
-  display: flex; /* Menyusun elemen dalam satu baris */
-  flex-wrap: wrap; /* Membungkus elemen dalam baris jika terlalu panjang */
-  padding-left: 0; /* Menghapus padding kiri default dari daftar */
+  display: flex; /* Membuat item-item berada dalam satu baris */
+  flex-wrap: wrap; /* Membungkus elemen dalam baris jika panjang */
   margin: 0; /* Menghapus margin default */
-  list-style-type: none; /* Menghapus bullet atau nomor default */
+  padding-left: 0; /* Menghapus padding kiri dari list */
 }
 
+/* Pengaturan untuk item di dalam list */
 .chat-box-ai .data-chat-ai li {
-  font-size: 1.1rem; /* Ukuran font */
+  display: inline-flex; /* Memastikan item berada dalam satu baris */
+  align-items: center; /* Menyelaraskan teks dengan bullet atau angka */
+  margin-right: 1px; /* Memberikan jarak antar item list */
+  font-size: 1.1rem; /* Ukuran teks */
   color: #ffffff; /* Warna teks putih */
-  margin-right: 15px; /* Memberikan jarak antar item */
-  margin-bottom: 0; /* Menghapus margin bawah antar item */
-  display: inline-flex; /* Menjadikan setiap item dalam satu baris */
-  align-items: center; /* Menyelaraskan teks dan bullet secara vertikal */
 }
 
-.chat-box-ai .data-chat-ai ul li::before, 
+/* Menambahkan bullet pada unordered list */
+.chat-box-ai .data-chat-ai ul li::before {
+  content: '•'; /* Menambahkan bullet */
+  color: #ffffff; /* Bullet berwarna putih */
+  font-size: 1.3rem; /* Ukuran bullet */
+  margin-right: 8px; /* Memberikan jarak antara bullet dan teks */
+}
+
+/* Menambahkan nomor pada ordered list */
 .chat-box-ai .data-chat-ai ol li::before {
-  content: ''; /* Membuat konten baru untuk bullet atau nomor */
-  display: inline-block;
-  width: 10px; /* Ukuran bullet */
-  height: 10px; /* Ukuran bullet */
-  border-radius: 50%; /* Membuat bullet bulat */
-  background-color: #ffffff; /* Warna bullet */
-  margin-right: 5px; /* Memberikan jarak antara bullet dan teks */
-}
-
-.chat-box-ai .data-chat-ai ol li {
-  counter-increment: list-item;
-}
-
-.chat-box-ai .data-chat-ai ol li::before {
-  content: counter(list-item) '.'; /* Menambahkan nomor pada ordered list */
-}
+  content: counter(list-item) '.'; /* Menambahkan nomor dengan format 1. 2. 3. */
+  counter-increment: list-item; /* Mengatur penghitungan nomor */
+  color: #ffffff; /* Nomor berwarna putih */
+  font-size: 1.3rem; /* Ukuran nomor */
+  margin-right: 8px; /* Memberikan jarak antara nomor dan teks */
+  }
 .input-chat{
   flex-grow: 1;
   height: 50px;
