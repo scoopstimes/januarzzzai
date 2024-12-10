@@ -63,12 +63,12 @@ async function displayWithDelay(element, text, delay = 50) {
       if (!isInList) {
         isInList = true;
         listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
-        element.innerHTML += `<${listType} style="display: flex; flex-wrap: wrap; list-style-type: none; padding-left: 0;">`; // Mulai tag list
+        element.innerHTML += `<${listType} style="padding-left: 20px; list-style-type: none; margin: 0; display: flex; flex-wrap: wrap;">`; // Mulai tag list
       }
 
       // Render item daftar
       const listItem = trimmedLine.replace(/^[•\d+\.]/, "").trim(); // Hapus bullet atau nomor dan trim text
-      element.innerHTML += `<li style="display: inline-block; margin-right: 15px; margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
+      element.innerHTML += `<li style="display: inline-block; margin-right: 10px; margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
     } else {
       // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
       if (isInList) {
