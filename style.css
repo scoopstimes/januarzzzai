@@ -694,21 +694,24 @@ video {
 }
 .chat-box-ai .data-chat-ai ul, 
 .chat-box-ai .data-chat-ai ol {
-  padding-left: 20px; /* Menambahkan padding kiri untuk memberi jarak */
+  padding-left: 0; /* Menghapus padding kiri default dari daftar */
   margin: 0; /* Menghapus margin default */
-  list-style-position: outside; /* Menjaga posisi bullets atau nomor di luar teks */
+  list-style-type: none; /* Tidak ada style bullet/nomor default */
 }
 
 .chat-box-ai .data-chat-ai li {
   font-size: 1.1rem; /* Ukuran font */
   color: #ffffff; /* Warna teks putih */
-  margin-bottom: 8px; /* Memberikan jarak antar item */
+  margin-right: 15px; /* Memberikan jarak antar item */
+  margin-bottom: 0; /* Menghapus jarak bawah antar item */
+  display: inline-block; /* Menjadikan setiap item dalam satu baris */
 }
 
 .chat-box-ai .data-chat-ai ul li::marker,
 .chat-box-ai .data-chat-ai ol li::marker {
   font-size: 1.3rem; /* Ukuran font marker (bullet/nomor) */
   color: #ffffff; /* Warna bullets/nomor */
+  margin-right: 5px; /* Memberikan sedikit jarak antara marker dan teks */
 }
 .input-chat{
   flex-grow: 1;
