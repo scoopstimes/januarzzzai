@@ -697,7 +697,7 @@ video {
   display: flex; /* Agar daftar ditampilkan dalam satu baris */
   flex-wrap: wrap; /* Membungkus elemen dalam baris jika terlalu panjang */
   list-style-type: none; /* Menghapus gaya default bullet/nomor */
-  padding-left: 0; /* Menghapus padding default */
+  padding-left: 20; /* Menghapus padding default */
   margin: 0; /* Menghapus margin default */
 }
 
