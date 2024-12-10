@@ -41,36 +41,32 @@ let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
-  element.innerHTML = ""; //p> tag
-   // Kosongkan konten sebelumnya
+  element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Pisahkan teks berdasarkan paragraf (dengan double newline atau angka sebagai pembatas)
+  // Pisahkan teks berdasarkan baris (gunakan newline sebagai pembatas)
   const lines = formattedText.split("\n");
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
 
-    // Deteksi apakah baris dimulai dengan angka (misalnya "1. perangkat wifi:")
+    // Deteksi apakah baris adalah daftar berpoin (dimulai dengan "•") atau bernomor ("1.")
+    const isBulletList = line.trim().startsWith("•");
     const isNumberedList = /^\d+\./.test(line.trim());
 
-    if (isNumberedList) {
-      // Jika baris adalah daftar bernomor, tampilkan seluruhnya dalam satu baris
-      element.innerHTML += line.trim() + " "; // Menampilkan daftar bernomor dalam satu baris
+    if (isBulletList || isNumberedList) {
+      // Tampilkan seluruh daftar berpoin atau bernomor dalam satu baris
+      element.innerHTML += line.trim() + "<br>";
     } else {
-      const words = line.split(" "); // Pisahkan line berdasarkan kata
+      const words = line.split(" "); // Pisahkan baris berdasarkan kata
       for (const word of words) {
         if (stopAIResponse) break;
         element.innerHTML += word + " "; // Tambahkan kata satu per satu dalam baris yang sama
         await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
       }
+      element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
     }
 
-    // Tambahkan <br> setelah baris biasa, tidak untuk daftar bernomor
-    if (!isNumberedList) {
-      element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line biasa
-    }
-
-    // Tunggu sebentar setelah menampilkan daftar bernomor atau baris
+    // Tunggu sebentar setelah menampilkan baris
     await new Promise((resolve) => setTimeout(resolve, delay));
   }
 }
