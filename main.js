@@ -3,22 +3,78 @@ import md from "markdown-it";
 
 // Initialize the model
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
+
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 let history = [];
-let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 // Jawaban spesifik sesuai pertanyaan
 const aiResponses = {
   "kamu Chatgpt bukan": "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
   "kamu chatgpt bukan": "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
+  "apakah kamu gemini": "Ya, Saya bukan Gemini, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations untuk menjadi teman mu dimana pun dan kapanpun :)",
+  "gemini": "Halo! Saya bukan Gemini, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
   "hai": "Hai! Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
   "halo": "Halo! Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
-  "terimakasih": "Sama-sama! Jika perlu bantuan lagi, tanya aku saja!",
-  "oke": "Siap! Jika perlu bantuan lagi, tanya aku saja!",
+  "kamu ai": "Ya, aku adalah AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
+  "januarzzz ai": "Halo, Aku Januarzzz AI, ada yang bisa aku bantu?",
+  "halo januarz ai": "Halo juga, Apa kabar nih? ada yang bisa aku bantu?",
+  "apakah kamu ai": "Ya, aku adalah AI yang dibuat oleh AdhiKarya Innovations untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
+  "kamu ini ai": "Ya, aku adalah Januarzzz AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, mengerjakan tugas, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
+  "kamu ini apa": "Saya adalah Januarzzz AI, dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya. Ada yang bisa kubantu?",
+  "kamu ini siapa": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "halo namamu siapa": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "siapa sih kamu": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
+  "kamu dibuat oleh siapa": "Saya dikembangkan oleh AdhiNug Innovations sebagai Januarzzz AI, yang diciptakan dengan hati.",
+  "terimakasih": "sama sama, jika perlu bantuan lagi tanya aku saja!",
+  "kamu dirancang oleh siapa": "Saya dirancang oleh siswa SMK bernama Januar Adhi N sebagai Januarzzz AI, yang diciptakan dengan hati.",
+  "terimakasih januarzzz ai": "sama sama, jika perlu bantuan tanya aku saja!",
+  "oke januarzzz ai": "siap!, jika perlu bantuan lagi tanya aku saja!",
+  "oke": "siap!, jika perlu bantuan lagi tanya aku saja!",
+  "terimakasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
+  "kamu dibuat sama siapa": "Saya dikembangkan oleh AdhiKarya Developer sebagai Januarzzz AI untuk membantu kamu berbagai hal, Ada yang bisa aku bantu?",
+  "terima kasih": "sama sama, jika perlu bantuan tanya aku saja!",
+  "terima kasih januarzzz ai": "sama sama, jika perlu lagi bantuan tanya aku saja!",
+  "terima kasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
 };
+let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
-// Fungsi untuk mendapatkan respons dari AI atau jawaban khusus
+async function displayWithDelay(element, text, delay = 50) {
+  const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
+  element.innerHTML = ""; //p> tag
+   // Kosongkan konten sebelumnya
+
+  // Pisahkan teks berdasarkan paragraf (dengan double newline atau angka sebagai pembatas)
+  const lines = formattedText.split("\n");
+
+  for (const line of lines) {
+    if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
+
+    // Deteksi apakah baris dimulai dengan angka (misalnya "1. perangkat wifi:")
+    const isNumberedList = /^\d+\./.test(line.trim());
+
+    if (isNumberedList) {
+      // Jika baris adalah daftar bernomor, tampilkan seluruhnya dalam satu baris
+      element.innerHTML += line.trim() + " "; // Menampilkan daftar bernomor dalam satu baris
+    } else {
+      const words = line.split(" "); // Pisahkan line berdasarkan kata
+      for (const word of words) {
+        if (stopAIResponse) break;
+        element.innerHTML += word + " "; // Tambahkan kata satu per satu dalam baris yang sama
+        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+      }
+    }
+
+    // Tambahkan <br> setelah baris biasa, tidak untuk daftar bernomor
+    if (!isNumberedList) {
+      element.innerHTML += "<br>"; // Baris baru hanya setelah selesai satu line biasa
+    }
+
+    // Tunggu sebentar setelah menampilkan daftar bernomor atau baris
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+}
+
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
@@ -32,60 +88,135 @@ async function getResponse(prompt) {
   const chat = await model.startChat({ history: history });
   const result = await chat.sendMessage(prompt);
   const response = await result.response;
-  const text = await response.text();
+  const text = await response.text(); // Pastikan await digunakan
   return text;
 }
 
-// Fungsi untuk menampilkan pesan dengan penundaan
-async function displayWithDelay(element, text, delay = 50) {
-  const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
-  element.innerHTML = "";
-
-  const lines = formattedText.split("\n");
-  for (const line of lines) {
-    if (stopAIResponse) break;
-
-    const words = line.split(" ");
-    for (const word of words) {
-      if (stopAIResponse) break;
-      element.innerHTML += word + " ";
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    }
-    element.innerHTML += "<br>";
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-}
-// User Chat Div
+// user chat div
 export const userDiv = (data) => {
   return `
-  <div class="flex items-center gap-2 justify-start">
-    <img
-      src="user.jpg"
-      alt="user icon"
-      class="w-10 h-10 rounded-full"
-    />
-    <p class="bg-gemDeep text-white p-1 rounded-md shadow-md">
-      ${data}
-    </p>
-  </div>
+    <div class="chat-box-user">
+      <p class="isi-chat-ai text-white p-1 rounded-md">
+        ${data}
+      </p>
+    </div>
   `;
 };
 
-// AI Chat Div
+// AI Chat div
+// AI Chat div
 export const aiDiv = (id) => {
   return `
-  <div class="flex gap-2 justify-end">
-    <pre id="${id}" class="bg-gemRegular/40 text-gemDeep p-1 rounded-md shadow-md whitespace-pre-wrap"></pre>
-    <img
-      src="chat-bot.jpg"
-      alt="AI icon"
-      class="w-10 h-10 rounded-full"
-    />
-  </div>
+    <div class="chat-box-ai">
+      <img src="chatbot.png" alt="chat bot icon" />
+      <div class="data-chat-ai">
+        <p id="${id}" class="text-white bg-gemRegular/40 text-gemDeep p-1 rounded-md shadow-md whitespace-pre-wrap"></p>
+        <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
+        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:0px; gap: 10px;">
+          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
+          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
+          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
+          <button class="mdi mdi-reload retry-button" id="retry-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleRetry('${id}')"></button>
+        </div>
+        <div id="feedback-${id}" style="opacity: 0.5;" class="feedback-text"></div>
+      </div>
+    </div>
   `;
 };
 
-// Submit Handler
+// Like button handler
+function handleLike(id) {
+  const likeButton = document.getElementById(`like-${id}`);
+  const dislikeButton = document.getElementById(`dislike-${id}`);
+  const feedbackDiv = document.getElementById(`feedback-${id}`);
+
+  likeButton.classList.remove("mdi-thumb-up-outline");
+  likeButton.classList.add("mdi-thumb-up");
+  dislikeButton.style.display = "none";
+
+  feedbackDiv.innerHTML = "Anda menyukai respon ini";
+}
+window.handleLike = handleLike;
+
+// Dislike button handler
+function handleDislike(id) {
+  const likeButton = document.getElementById(`like-${id}`);
+  const dislikeButton = document.getElementById(`dislike-${id}`);
+  const feedbackDiv = document.getElementById(`feedback-${id}`);
+
+  dislikeButton.classList.remove("mdi-thumb-down-outline");
+  dislikeButton.classList.add("mdi-thumb-down");
+  likeButton.style.display = "none";
+
+  feedbackDiv.innerHTML = "Anda tidak menyukai respon ini";
+}
+window.handleDislike = handleDislike;
+
+// Copy button handler
+function handleCopy(id) {
+  const responseTextElement = document.getElementById(id);
+  const responseText = responseTextElement.innerHTML; // Ambil HTML konten
+
+  // Ganti <br> dengan newline (\n) dan hapus tag HTML lainnya
+  const formattedText = responseText.replace(/<br\s*\/?>/g, "\n").replace(/<\/?[^>]+(>|$)/g, "");
+
+  // Salin teks yang sudah diformat
+  navigator.clipboard.writeText(formattedText).then(() => {
+    alert("Pesan berhasil disalin!");
+  }).catch(err => {
+    alert("Gagal menyalin teks: " + err);
+  });
+}
+window.handleCopy = handleCopy;
+
+// Retry button handler
+async function handleRetry(id) {
+  const responseTextElement = document.getElementById(id);
+  const feedbackDiv = document.getElementById(`feedback-${id}`);
+  const responseButtons = document.getElementById(`response-buttons-${id}`);
+
+  // Hide the response buttons when retrying
+  responseButtons.style.display = "none";
+
+  responseTextElement.textContent = "...";
+
+  // Get the last user prompt from history
+  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
+
+  if (!userPrompt) {
+    console.error("No user prompt found for retry.");
+    return;
+  }
+
+  // Fetch the AI's response using the last prompt
+  const aiResponse = await getResponse(userPrompt);
+  await displayWithDelay(responseTextElement, aiResponse, 50);
+
+  feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
+
+  // Show the response buttons again
+  responseButtons.style.display = "block";
+
+  // Reset the "like" and "dislike" buttons to their initial state
+  const likeButton = document.getElementById(`like-${id}`);
+  const dislikeButton = document.getElementById(`dislike-${id}`);
+
+  // Ensure both buttons are visible and reset their states
+  likeButton.style.display = "inline-block";
+  dislikeButton.style.display = "inline-block";
+
+  likeButton.classList.remove("mdi-thumb-up");
+  likeButton.classList.add("mdi-thumb-up-outline");
+  dislikeButton.classList.remove("mdi-thumb-down");
+  dislikeButton.classList.add("mdi-thumb-down-outline");
+
+  // Reset feedback text
+  feedbackDiv.innerHTML = "";
+}
+
+window.handleRetry = handleRetry;
+
+// Tombol Dinamis untuk Kirim dan Hentikan Respons
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -110,6 +241,12 @@ async function handleSubmit(event) {
       return;
     }
 
+    // Menyembunyikan teks intro setelah pesan pertama
+    const introText = document.getElementById("intro-text");
+    if (introText) {
+      introText.style.display = "none";  // Sembunyikan intro setelah pesan pertama dikirim
+    }
+
     chatArea.innerHTML += userDiv(prompt);
     userMessage.value = "";
 
@@ -121,6 +258,9 @@ async function handleSubmit(event) {
     const aiResponseElement = document.getElementById(uniqueID);
 
     await displayWithDelay(aiResponseElement, aiResponse, 100);
+
+    const responseButtons = document.getElementById(`response-buttons-${uniqueID}`);
+    responseButtons.style.display = "block";
 
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
@@ -137,10 +277,9 @@ async function handleSubmit(event) {
   }
 }
 
-// Event Listener untuk Form
 const chatForm = document.getElementById("chat-form");
 if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
 } else {
   console.error("chat-form element not found!");
-}
+      }
