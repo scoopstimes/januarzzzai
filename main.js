@@ -10,6 +10,7 @@ let stopAIResponse = false;
 
 // Fungsi mengganti kata kunci dalam respons
 const replacements = {
+  "Google": "Januar Adhi Nugroho",
   "Gemini": "Januarzzz AI",
   "Google AI": "Januarzzz AI",
 };
@@ -17,7 +18,7 @@ const replacements = {
 function replaceKeywords(response) {
   let modifiedResponse = response;
   for (const [target, replacement] of Object.entries(replacements)) {
-    const regex = new RegExp(`\\b${target}\\b`, "gi");
+    const regex = new RegExp(`\\b${target}\\b`, "gi"); // \b memastikan hanya mengganti kata utuh
     modifiedResponse = modifiedResponse.replace(regex, replacement);
   }
   return modifiedResponse;
@@ -62,18 +63,18 @@ export const aiDiv = (id) => {
       <img src="chatbot.png" alt="chat bot icon" />
       <div class="data-chat-ai">
         <p id="${id}" class="text-white"></p>
-        <div id="response-buttons-${id}" class="response-buttons" style="display: none;">
-          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" onclick="handleLike('${id}')"></button>
-          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" onclick="handleDislike('${id}')"></button>
-          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" onclick="handleCopy('${id}')"></button>
-          <button class="mdi mdi-reload retry-button" id="retry-${id}" onclick="handleRetry('${id}')"></button>
+        <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
+        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:0px; gap: 10px;">
+          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
+          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
+          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
+          <button class="mdi mdi-reload retry-button" id="retry-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleRetry('${id}')"></button>
         </div>
-        <div id="feedback-${id}" class="feedback-text"></div>
+        <div id="feedback-${id}" style="opacity: 0.5;" class="feedback-text"></div>
       </div>
     </div>
   `;
 };
-
 // Tombol suka
 function handleLike(id) {
   const likeButton = document.getElementById(`like-${id}`);
