@@ -25,11 +25,11 @@ function replaceKeywords(response) {
     (_, match) => `Saya adalah ${match.trim()}.`
   );
 
-  // Pastikan nama sesuai jika AI menyebutkan dirinya
-  if (!/Januarzzz AI/i.test(modifiedResponse)) {
+  // Pastikan hanya satu pernyataan "Saya adalah Januarzzz AI"
+  if (!/Saya adalah Januarzzz AI\./i.test(modifiedResponse)) {
     modifiedResponse = modifiedResponse.replace(
-      /\bsaya adalah ([^.]+)\./gi,
-      (_, match) => `Saya adalah Januarzzz AI.`
+      /saya adalah ([^.]+)\./gi,
+      () => `Saya adalah Januarzzz AI.`
     );
   }
 
