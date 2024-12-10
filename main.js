@@ -43,31 +43,31 @@ async function displayWithDelay(element, text, delay = 50) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Pisahkan teks berdasarkan baris (gunakan newline sebagai pembatas)
+  // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
 
+    const trimmedLine = line.trim();
+
     // Deteksi apakah baris adalah daftar berpoin (dimulai dengan "•") atau bernomor ("1.")
-    const isBulletList = line.trim().startsWith("•");
-    const isNumberedList = /^\d+\./.test(line.trim());
+    const isBulletList = trimmedLine.startsWith("•");
+    const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
-      // Tampilkan seluruh daftar berpoin atau bernomor dalam satu baris
-      element.innerHTML += line.trim() + "<br>";
+      // Tampilkan daftar berpoin atau bernomor langsung dalam satu baris
+      element.innerHTML += `<div>${trimmedLine}</div>`;
     } else {
-      const words = line.split(" "); // Pisahkan baris berdasarkan kata
+      // Jika bukan daftar, tampilkan kata per kata dengan delay
+      const words = trimmedLine.split(" ");
       for (const word of words) {
         if (stopAIResponse) break;
-        element.innerHTML += word + " "; // Tambahkan kata satu per satu dalam baris yang sama
+        element.innerHTML += word + " ";
         await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
       }
       element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
     }
-
-    // Tunggu sebentar setelah menampilkan baris
-    await new Promise((resolve) => setTimeout(resolve, delay));
   }
 }
 
