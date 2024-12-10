@@ -703,7 +703,7 @@ video {
 
 .chat-box-ai .data-chat-ai li {
   display: inline-block; /* Menampilkan setiap item dalam satu baris */
-  margin-right: 5px; /* Memberikan jarak antar item */
+  margin-right: 1px; /* Memberikan jarak antar item */
   margin-bottom: 8px; /* Memberikan jarak antar baris jika wrapping terjadi */
   font-size: 1.1rem; /* Ukuran font */
   color: #ffffff; /* Warna teks putih */
