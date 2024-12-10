@@ -55,7 +55,6 @@ async function displayWithDelay(element, text, delay = 50) {
     await new Promise((resolve) => setTimeout(resolve, delay));
   }
 }
-
 // User Chat Div
 export const userDiv = (data) => {
   return `
