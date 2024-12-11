@@ -205,7 +205,7 @@ async function handleRetry(id) {
   // Hide the response buttons when retrying
   responseButtons.style.display = "none";
 
-  responseTextElement.textContent = "Respon ulang...";
+  responseTextElement.textContent = "";
 
   // Get the last user prompt from history
   const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
