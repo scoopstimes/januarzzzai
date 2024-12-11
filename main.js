@@ -143,9 +143,18 @@ export const aiDiv = (id) => {
     <div class="chat-box-ai">
       <img src="chatbot.png" alt="chat bot icon" />
       <div class="data-chat-ai">
-        <p id="${id}" class="text-white"></p>
+        <!-- Loading dots -->
+        <div id="loading-dots-${id}" class="loading-dots" style="display: flex; align-items: center; gap: 5px;">
+          <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite;"></span>
+          <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.2s;"></span>
+          <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.4s;"></span>
+        </div>
+        
+        <!-- AI response text -->
+        <p id="${id}" class="text-white" style="display: none;"></p>
+        
         <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
-        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:0px; gap: 10px;">
+        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top: 0px; gap: 10px;">
           <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
           <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
           <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
@@ -156,7 +165,6 @@ export const aiDiv = (id) => {
     </div>
   `;
 };
-
 // Like button handler
 function handleLike(id) {
   const likeButton = document.getElementById(`like-${id}`);
@@ -359,23 +367,28 @@ function createAIResponseTask(uniqueID, prompt) {
 }
 
 async function displayWithDelay(element, text, delay = 10) {
-    // Kosongkan elemen sebelumnya
-    element.innerHTML = "";
+  const loadingDots = document.getElementById(`loading-dots-${element.id}`);
+  const responseText = document.getElementById(element.id);
 
-    // Pecah teks menjadi array huruf
-    const letters = text.split("");
+  // Tampilkan dots dan sembunyikan teks
+  if (loadingDots) loadingDots.style.display = "flex";
+  if (responseText) responseText.style.display = "none";
 
-    // Tambahkan span untuk setiap huruf agar bisa dianimasikan
-    letters.forEach((char, index) => {
-        const span = document.createElement("span");
-        span.textContent = char;
-        span.style.opacity = "0"; // Sembunyikan huruf di awal
-        element.appendChild(span);
-        setTimeout(() => {
-            span.style.opacity = "1"; // Tampilkan huruf dengan animasi
-        }, index * delay);
-    });
-}
+  // Tunggu sebentar sebelum memulai animasi teks
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Mulai animasi teks
+  element.innerHTML = ""; // Kosongkan elemen sebelum menampilkan teks
+  for (let i = 0; i < text.length; i++) {
+    if (stopAIResponse) return; // Hentikan jika `stopAIResponse` diatur
+    element.innerHTML += text[i];
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  // Setelah teks selesai ditampilkan, sembunyikan dots dan tampilkan teks
+  if (loadingDots) loadingDots.style.display = "none";
+  if (responseText) responseText.style.display = "block";
+    }
 const chatForm = document.getElementById("chat-form");
 if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
