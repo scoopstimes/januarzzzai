@@ -325,4 +325,4 @@ async function handleSubmit(event) {
     buttonIcon.classList.remove("mdi-record-circle-outline");
     buttonIcon.classList.add("mdi-send-circle-outline");
   }
-                               }
+}
