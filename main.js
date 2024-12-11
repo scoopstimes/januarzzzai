@@ -15,7 +15,15 @@ const replacements = {
   "Google AI": "Januarzzz AI",
 };
 
+let isIntroduced = false; // Menyimpan status pengenalan AI
+
 function replaceKeywords(response) {
+  // Jika ini adalah pengenalan pertama kali, tambahkan "Saya adalah Januarzzz AI"
+  if (!isIntroduced) {
+    response = "Saya adalah Januarzzz AI. " + response;
+    isIntroduced = true; // Menandakan AI sudah memperkenalkan diri
+  }
+
   // Ganti "Google" dengan "Januar Adhi Nugroho"
   let modifiedResponse = response.replace(/Google/g, "Januar Adhi Nugroho");
 
@@ -24,11 +32,6 @@ function replaceKeywords(response) {
 
   // Hapus kalimat yang mengandung "saya bukan Januarzzz AI" dan "Aku bukan Januarzzz AI"
   modifiedResponse = modifiedResponse.replace(/\b(saya|Aku) bukan Januarzzz AI\b/gi, "");
-
-  // Pastikan hanya ada satu "Saya adalah Januarzzz AI"
-  if (!/Saya adalah Januarzzz AI\./i.test(modifiedResponse)) {
-    modifiedResponse = `Saya adalah Januarzzz AI. ${modifiedResponse}`;
-  }
 
   return modifiedResponse;
 }
