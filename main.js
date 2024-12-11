@@ -208,11 +208,11 @@ async function handleRetry(id) {
   const responseTextElement = document.getElementById(id);
   const feedbackDiv = document.getElementById(`feedback-${id}`);
   const responseButtons = document.getElementById(`response-buttons-${id}`);
-  
+
   // Hide the response buttons when retrying
   responseButtons.style.display = "none";
 
-  // Clear the previous AI response and user prompt
+  // Clear all the content (including both user and AI messages)
   responseTextElement.textContent = "";  
   feedbackDiv.innerHTML = "";
 
@@ -224,7 +224,7 @@ async function handleRetry(id) {
     return;
   }
 
-  // Remove any old feedback or responses from previous attempts
+  // Remove any old messages from the DOM, including AI and user messages
   const oldUserMessage = document.getElementById(`user-message-${id}`);
   const oldAiMessage = document.getElementById(`ai-message-${id}`);
   
@@ -235,7 +235,7 @@ async function handleRetry(id) {
   const aiResponse = await getResponse(userPrompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 
-  // Add the new response and feedback
+  // Show the feedback message
   feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
 
   // Show the response buttons again
@@ -259,7 +259,6 @@ async function handleRetry(id) {
 }
 
 window.handleRetry = handleRetry;
-
 // Tombol Dinamis untuk Kirim dan Hentikan Respons
 async function handleSubmit(event) {
   event.preventDefault();
