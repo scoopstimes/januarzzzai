@@ -272,7 +272,7 @@ async function handleSubmit(event) {
     stopAIResponse = false;
 
     button.setAttribute("data-mode", "recording");
-    buttonIcon.classList.remove("mdi-send-circle");
+    buttonIcon.classList.remove("mdi-send-circle-outline");
     buttonIcon.classList.add("mdi-record-circle-outline");
 
     const userMessage = document.getElementById("prompt");
@@ -282,7 +282,7 @@ async function handleSubmit(event) {
     if (prompt === "") {
       button.setAttribute("data-mode", "idle");
       buttonIcon.classList.remove("mdi-record-circle-outline");
-      buttonIcon.classList.add("mdi-send-circle");
+      buttonIcon.classList.add("mdi-send-circle-outline");
       return;
     }
 
@@ -314,7 +314,7 @@ async function handleSubmit(event) {
 
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
-    buttonIcon.classList.add("mdi-send-circle");
+    buttonIcon.classList.add("mdi-send-circle-outline");
 
     history.push({ role: "user", parts: prompt });
     history.push({ role: "model", parts: aiResponse });
@@ -324,7 +324,7 @@ async function handleSubmit(event) {
 
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
-    buttonIcon.classList.add("mdi-send-circle");
+    buttonIcon.classList.add("mdi-send-circle-outline");
   }
 }
 
