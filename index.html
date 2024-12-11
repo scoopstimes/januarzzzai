@@ -23,7 +23,7 @@
             <span style="font-size: 10px;">Model AI Versi: 0.1.2024 (Beta Testing)</span>
           </div>
           <div style="display: flex; margin-left: auto; gap: 20px; margin-right: 20px;">
-            <a href="index.html"><span class="mdi mdi-pencil-box-outline" style="color: white; font-size: 27px;"></span></a>
+            <button onclick="goToWebsite('index.html')"><span class="mdi mdi-pencil-box-outline" style="color: white; font-size: 27px;"></button></a>
             <span class="mdi mdi-information-outline" style="color: white; font-size: 27px;"></span>
           </div>
         </div>
@@ -94,6 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
   typeText();
 });
 
+
+      function goToWebsite(websiteURL) {
+      window.location.href = websiteURL;
+//alert("Server sedang diperbaiki, mohon menunggu.");
+    }
+function goToLink(websiteURL) {
+      window.location.href = websiteURL;
+
+}
     </script>
     <script type="module" src="/main.js"></script>
   </body>
