@@ -6,7 +6,17 @@
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
+.buttongoweb{
 
+  background-color: transparent;
+
+  border: 0px solid transparent; /* Atur warna dan ukuran garis sesuai kebutuhan */
+  color: transparent; /* Atur warna teks sesuai kebutuhan */
+  padding: 0px 0px; /* Atur ukuran padding sesuai kebutuhan */
+  text-align: left;
+  margin: 0;
+  border-radius: 5px; /* Atur radius border sesuai kebutuhan */
+}
     @keyframes gradientAnimation {
         0% {
             background-position: 0% 50%;
