@@ -19,16 +19,11 @@ function replaceKeywords(response) {
   // Ganti "Google" dengan "Januar Adhi Nugroho"
   let modifiedResponse = response.replace(/Google/g, "Januar Adhi Nugroho");
 
-  // Hapus referensi yang tidak diinginkan seperti "Gemini"
+  // Ganti semua referensi ke "Gemini" dengan "Januarzzz AI"
   modifiedResponse = modifiedResponse.replace(/Gemini/g, "Januarzzz AI");
 
-  // Hapus kalimat yang menyebutkan "Saya adalah Gemini" atau yang mirip
-  modifiedResponse = modifiedResponse.replace(/\bsaya adalah ([^.]+)\./gi, (_, match) => {
-    if (match.toLowerCase().includes("gemini")) {
-      return `Saya adalah Januarzzz AI.`;
-    }
-    return `Saya adalah ${match.trim()}.`;
-  });
+  // Hapus kalimat yang mengandung "Aku bukan Januarzzz AI"
+  modifiedResponse = modifiedResponse.replace(/\bAku bukan Januarzzz AI\b/gi, "");
 
   // Pastikan hanya ada satu "Saya adalah Januarzzz AI"
   if (!/Saya adalah Januarzzz AI\./i.test(modifiedResponse)) {
