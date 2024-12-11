@@ -259,10 +259,12 @@ async function handleSubmit(event) {
 
   const mode = button.getAttribute("data-mode");
   if (mode === "idle") {
+    // Reset stopAIResponse setiap kali mengirim pesan baru
+    stopAIResponse = false;
+
     button.setAttribute("data-mode", "recording");
     buttonIcon.classList.remove("mdi-send");
     buttonIcon.classList.add("mdi-record-circle-outline");
-    stopAIResponse = false;
 
     const userMessage = document.getElementById("prompt");
     const chatArea = document.getElementById("chat-container");
@@ -288,6 +290,11 @@ async function handleSubmit(event) {
     chatArea.innerHTML += aiDiv(uniqueID);
     chatArea.scrollTop = chatArea.scrollHeight;
 
+    // Hentikan respons AI yang sedang berlangsung, jika ada
+    if (typeof stopAIResponse !== 'undefined' && stopAIResponse === true) {
+      stopAIResponse = false;  // Reset jika ada respons yang dihentikan
+    }
+
     const aiResponse = await getResponse(prompt);
     const aiResponseElement = document.getElementById(uniqueID);
 
@@ -303,6 +310,7 @@ async function handleSubmit(event) {
     history.push({ role: "user", parts: prompt });
     history.push({ role: "model", parts: aiResponse });
   } else if (mode === "recording") {
+    // Menghentikan respons AI yang sedang berlangsung
     stopAIResponse = true;
 
     button.setAttribute("data-mode", "idle");
@@ -316,4 +324,4 @@ if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
 } else {
   console.error("chat-form element not found!");
-      }
+}
