@@ -144,12 +144,6 @@ export const aiDiv = (id) => {
     <div class="chat-box-ai">
       <img src="chatbot.png" alt="chat bot icon" />
       <div class="data-chat-ai">
-        <!-- Loading dots -->
-        <div id="loading-dots-${id}" class="loading-dots" style="display: flex; align-items: center; gap: 5px;">
-          <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite;"></span>
-          <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.2s;"></span>
-          <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.4s;"></span>
-        </div>
         
         <!-- AI response text -->
         <p id="${id}" class="text-white" style="display: none;"></p>
