@@ -7,8 +7,17 @@
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
 button:focus {
-  outline: none;
-  box-shadow: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent; /* Menghilangkan efek highlight pada perangkat mobile */
 }
     @keyframes gradientAnimation {
         0% {
