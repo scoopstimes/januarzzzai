@@ -161,7 +161,7 @@ function handleLike(id) {
   likeButton.classList.add("mdi-thumb-up");
   dislikeButton.style.display = "none";
 
-  feedbackDiv.innerHTML = "Anda menyukai respon ini";
+  feedbackDiv.innerHTML = "Respon yang Bagus.";
 }
 window.handleLike = handleLike;
 
@@ -175,7 +175,7 @@ function handleDislike(id) {
   dislikeButton.classList.add("mdi-thumb-down");
   likeButton.style.display = "none";
 
-  feedbackDiv.innerHTML = "Anda tidak menyukai respon ini";
+  feedbackDiv.innerHTML = "Respon yang Buruk.";
 }
 window.handleDislike = handleDislike;
 
@@ -189,7 +189,7 @@ function handleCopy(id) {
 
   // Salin teks yang sudah diformat
   navigator.clipboard.writeText(formattedText).then(() => {
-    alert("Pesan berhasil disalin!");
+    alert("Berhasil disalin!");
   }).catch(err => {
     alert("Gagal menyalin teks: " + err);
   });
@@ -205,7 +205,7 @@ async function handleRetry(id) {
   // Hide the response buttons when retrying
   responseButtons.style.display = "none";
 
-  responseTextElement.textContent = "...";
+  responseTextElement.textContent = "Respon ulang...";
 
   // Get the last user prompt from history
   const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
