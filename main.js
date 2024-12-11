@@ -95,16 +95,23 @@ async function displayWithDelay(element, text, delay = 30) {
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
-  // Deteksi apakah prompt berhubungan dengan Gemini AI secara otomatis
-  if (lowerCasePrompt.includes("gemini ai itu apa") || lowerCasePrompt.includes("apa itu gemini") || lowerCasePrompt.includes("gemini")) {
-    // Delay 5 detik sebelum merespon tentang Gemini AI
+  // Cek apakah prompt mengandung pertanyaan tentang Gemini AI
+  if (lowerCasePrompt.includes("gemini ai") || lowerCasePrompt.includes("apa itu gemini") || lowerCasePrompt.includes("gemini")) {
+    // Tunggu 5 detik sebelum memberikan respons
     await new Promise(resolve => setTimeout(resolve, 5000));
 
-    // Respons otomatis tentang Gemini AI
+    // Respons khusus untuk Gemini AI
     return "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
   }
 
-  // Jika tidak ada kecocokan, kirim prompt ke model AI (seperti biasa)
+  // Periksa jika ada kecocokan di template aiResponses
+  for (const keyword in aiResponses) {
+    if (lowerCasePrompt.includes(keyword)) {
+      return aiResponses[keyword];
+    }
+  }
+
+  // Jika tidak ada kecocokan, kirim prompt ke model AI
   const chat = await model.startChat({ history: history });
   const result = await chat.sendMessage(prompt);
   const response = await result.response;
