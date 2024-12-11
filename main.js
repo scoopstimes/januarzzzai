@@ -16,24 +16,27 @@ const replacements = {
 };
 
 let isIntroduced = false; // Menyimpan status pengenalan AI
+let isIntroduced = false; // Menyimpan status pengenalan AI
 
-function replaceKeywords(response) {
+function replaceKeywords(response, isAIResponse = false) {
   // Jika ini adalah pengenalan pertama kali, tambahkan "Saya adalah Januarzzz AI"
-  if (!isIntroduced) {
+  if (!isIntroduced && isAIResponse) {
     response = "Saya adalah Januarzzz AI. " + response;
     isIntroduced = true; // Menandakan AI sudah memperkenalkan diri
   }
 
-  // Ganti "Google" dengan "Januar Adhi Nugroho"
-  let modifiedResponse = response.replace(/Google/g, "Januar Adhi Nugroho");
+  // Hanya ganti "Gemini" menjadi "Januarzzz AI" jika ini adalah respon AI
+  if (isAIResponse) {
+    response = response.replace(/Gemini/g, "Januarzzz AI");
+  }
 
-  // Ganti semua referensi ke "Gemini" dengan "Januarzzz AI"
-  modifiedResponse = modifiedResponse.replace(/Gemini/g, "Januarzzz AI");
+  // Ganti "Google" dengan "Januar Adhi Nugroho" jika itu bagian dari respon AI
+  response = response.replace(/Google/g, "Januar Adhi Nugroho");
 
   // Hapus kalimat yang mengandung "saya bukan Januarzzz AI" dan "Aku bukan Januarzzz AI"
-  modifiedResponse = modifiedResponse.replace(/\b(saya|Aku) bukan Januarzzz AI\b/gi, "");
+  response = response.replace(/\b(saya|Aku) bukan Januarzzz AI\b/gi, "");
 
-  return modifiedResponse;
+  return response;
 }
 // Fungsi untuk mendapatkan respons AI
 async function getResponse(prompt) {
