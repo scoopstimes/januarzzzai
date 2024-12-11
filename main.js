@@ -95,6 +95,9 @@ async function displayWithDelay(element, text, delay = 30) {
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
+  // Tambahkan delay 5 detik sebelum memberikan respon
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
   for (const keyword in aiResponses) {
     if (lowerCasePrompt.includes(keyword)) {
       return aiResponses[keyword];
