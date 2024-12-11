@@ -42,8 +42,24 @@ const aiResponses = {
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 30) {
+  const loadingDotsId = `loading-dots-${element.id}`; // ID untuk loading dots
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
-  element.innerHTML = ""; // Kosongkan konten sebelumnya
+
+  // Tambahkan loading dots
+  element.innerHTML = `
+    <div id="${loadingDotsId}" class="loading-dots" style="display: flex; align-items: center; gap: 5px;">
+      <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite;"></span>
+      <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.2s;"></span>
+      <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.4s;"></span>
+    </div>
+  `;
+
+  // Tunggu sebelum mulai menampilkan teks
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  // Ganti loading dots dengan teks yang dianimasikan
+  document.getElementById(loadingDotsId).remove();
+  element.innerHTML = ""; // Kosongkan elemen sebelumnya
 
   // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
@@ -93,7 +109,7 @@ async function displayWithDelay(element, text, delay = 30) {
   if (isInList) {
     element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
   }
-}
+    }
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
@@ -365,30 +381,6 @@ function createAIResponseTask(uniqueID, prompt) {
 
   return { cancel };
 }
-
-async function displayWithDelay(element, text, delay = 10) {
-  const loadingDots = document.getElementById(`loading-dots-${element.id}`);
-  const responseText = document.getElementById(element.id);
-
-  // Tampilkan dots dan sembunyikan teks
-  if (loadingDots) loadingDots.style.display = "flex";
-  if (responseText) responseText.style.display = "none";
-
-  // Tunggu sebentar sebelum memulai animasi teks
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  // Mulai animasi teks
-  element.innerHTML = ""; // Kosongkan elemen sebelum menampilkan teks
-  for (let i = 0; i < text.length; i++) {
-    if (stopAIResponse) return; // Hentikan jika `stopAIResponse` diatur
-    element.innerHTML += text[i];
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-
-  // Setelah teks selesai ditampilkan, sembunyikan dots dan tampilkan teks
-  if (loadingDots) loadingDots.style.display = "none";
-  if (responseText) responseText.style.display = "block";
-    }
 const chatForm = document.getElementById("chat-form");
 if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
