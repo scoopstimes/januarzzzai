@@ -38,6 +38,39 @@ const aiResponses = {
   "terima kasih januarzzz ai": "sama sama, jika perlu lagi bantuan tanya aku saja!",
   "terima kasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
 };
+
+// Deteksi bahasa dari teks
+async function detectLanguage(text) {
+  const englishWords = /[a-zA-Z]/g;
+  if (englishWords.test(text)) {
+    return "en";
+  }
+  return "id"; // Default: Bahasa Indonesia
+}
+
+// Terjemahkan respons jika perlu
+async function translateResponse(response, language) {
+  const translations = {
+    en: {
+      "Saya bukan ChatGPT, Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations. Apa yang kamu ingin ketahui?":
+        "I am not ChatGPT. I am Januarzzz AI, an AI-based assistant developed by AdhiNug Innovations. What would you like to know?",
+      "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations. Apa yang kamu ingin ketahui?":
+        "Hello! I am not ChatGPT, but I am Januarzzz AI, an AI-based assistant developed by AdhiNug Innovations. What would you like to know?",
+      "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations. Apa yang kamu ingin ketahui?":
+        "I am Januarzzz AI, an AI-based assistant created by AdhiNug Innovations. What would you like to know?",
+      "Saya dikembangkan oleh AdhiNug Innovations sebagai Januarzzz AI, yang diciptakan dengan hati.":
+        "I was developed by AdhiNug Innovations as Januarzzz AI, created with care.",
+      "Gemini adalah model AI dari Google, tetapi saya adalah Januarzzz AI, asisten yang dirancang oleh AdhiNug Innovations.":
+        "Gemini is an AI model by Google, but I am Januarzzz AI, an assistant designed by AdhiNug Innovations.",
+      "Sama-sama! Jika butuh bantuan lagi, jangan ragu untuk bertanya, ya!":
+        "You're welcome! If you need more help, don't hesitate to ask!",
+      "Halo! Saya adalah Januarzzz AI, asisten virtualmu. Ada yang bisa saya bantu?":
+        "Hello! I am Januarzzz AI, your virtual assistant. How can I assist you?",
+    },
+  };
+
+  return translations[language]?.[response] || response;
+}
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 30) {
