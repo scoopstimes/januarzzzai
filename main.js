@@ -224,16 +224,16 @@ async function handleRetry(id) {
     return;
   }
 
-  // Remove the AI's and user's second message (but leave the first message and its response intact)
+  // Remove only the second message and its AI response (not the first one)
   const allMessages = document.querySelectorAll(".message"); // Assuming you have a common class for message elements
   allMessages.forEach(message => {
-    // Check if this message is related to the second message (we use the id to determine this)
-    if (message.id !== id && message.id !== `response-${id}`) {
-      message.remove(); // Remove any message that is not the first one
+    // Remove messages that are not related to the first user message
+    if (message.id !== id && !message.id.startsWith("response-" + id)) {
+      message.remove();
     }
   });
 
-  // Fetch the AI's response based on the first prompt (user's first message)
+  // Fetch the AI's response based on the first user prompt
   const aiResponse = await getResponse(userPrompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 
@@ -261,7 +261,6 @@ async function handleRetry(id) {
 }
 
 window.handleRetry = handleRetry;
-
 async function handleSubmit(event) {
   event.preventDefault();
 
