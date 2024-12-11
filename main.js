@@ -143,7 +143,7 @@ async function getResponse(prompt) {
 
   // Cek apakah prompt mengandung kata kunci tentang Gemini AI
   if (geminiKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
-    await new Promise(resolve => setTimeout(resolve, 5000)); // Tambahkan delay
+    await new Promise(resolve => setTimeout(resolve, 3000)); // Tambahkan delay
     const geminiResponse = 
       "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
 
@@ -155,7 +155,7 @@ async function getResponse(prompt) {
   for (const keyword in aiResponses) {
     if (lowerCasePrompt.includes(keyword)) {
       const response = aiResponses[keyword];
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Tambahkan delay
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Tambahkan delay
       return await translateResponse(response, language); // Terjemahkan jika perlu
     }
   }
