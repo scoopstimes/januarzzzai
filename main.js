@@ -10,6 +10,7 @@ let stopAIResponse = false;
 
 // Fungsi mengganti kata kunci dalam respons
 const replacements = {
+const replacements = {
   "Google": "Januar Adhi Nugroho",
   "Gemini": "Januarzzz AI",
   "Google AI": "Januarzzz AI",
@@ -17,25 +18,38 @@ const replacements = {
 
 let isFirstResponse = true;
 
- function replaceKeywords(response) {
-  // Hanya ganti "Gemini" dengan "Januarzzz AI" di bagian pengenalan diri
-  if (response.includes("Gemini")) {
+function replaceKeywords(response, isIntroduction = false) {
+  // Jika ini adalah perkenalan, ganti "Gemini" dengan "Januarzzz AI" dan "Google" dengan "Januar Adhi Nugroho"
+  if (isIntroduction) {
+    // Ganti "Gemini" dengan "Januarzzz AI" hanya di pengenalan
     response = response.replace(/Gemini/g, "Januarzzz AI");
+    // Ganti "Google" dengan "Januar Adhi Nugroho" hanya di pengenalan
+    response = response.replace(/Google/g, "Januar Adhi Nugroho");
+  } else {
+    // Jangan mengganti "Gemini" atau "Google" di bagian lain (penjelasan, dll.)
+    // Cukup ganti "Google AI" dengan "Januarzzz AI" jika diperlukan
+    response = response.replace(/Google AI/g, "Januarzzz AI");
   }
-
-  // Ganti Google dengan Januar Adhi Nugroho di seluruh teks
-  response = response.replace(/Google/g, "Januar Adhi Nugroho");
 
   return response;
 }
 
 // Contoh pemanggilan
-let userInput = "Apa itu Gemini AI?";
-let response = "Halo! Saya bukan Januarzzz AI. Saya adalah Gemini, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?";
 
-// Proses penggantian
-response = replaceKeywords(response);
-console.log(response); // Output: Halo! Saya bukan Januarzzz AI. Saya adalah Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?
+let userInput = "Apa itu Gemini AI?";
+let responseIntroduction = "Halo! Saya bukan Januarzzz AI. Saya adalah Gemini, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?";
+
+// Proses penggantian jika ini adalah bagian pengenalan
+let finalResponseIntroduction = replaceKeywords(responseIntroduction, true);
+
+console.log(finalResponseIntroduction); // Output: Halo! Saya bukan Januarzzz AI. Saya adalah Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?
+
+let responseExplanation = "Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Google. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya.";
+
+// Proses penggantian untuk penjelasan
+let finalResponseExplanation = replaceKeywords(responseExplanation, false);
+
+console.log(finalResponseExplanation); // Output: Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januarzzz AI. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya. // Output: Halo! Saya bukan Januarzzz AI. Saya adalah Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?
 async function getResponse(prompt) {
   const chat = await model.startChat({ history });
   const result = await chat.sendMessage(prompt);
