@@ -96,22 +96,33 @@ async function displayWithDelay(element, text, delay = 30) {
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
-  // Cek apakah prompt mengandung pertanyaan tentang Gemini AI
-  if (lowerCasePrompt.includes("gemini ai") || lowerCasePrompt.includes("apa itu gemini") || lowerCasePrompt.includes("gemini")) {
-    // Tunggu 5 detik sebelum memberikan respons
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Respons khusus untuk Gemini AI
-    return "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
-  }
+  // Kata kunci untuk mendeteksi pertanyaan tentang Gemini AI dalam berbagai bahasa
+  const geminiKeywords = [
+    "gemini ai",       // Bahasa Indonesia / Inggris
+    "apa itu gemini",  // Bahasa Indonesia
+    "what is gemini",  // Bahasa Inggris
+    "gemini是什么",      // Bahasa Mandarin
+    "qué es gemini",   // Bahasa Spanyol
+    "gemini ist",      // Bahasa Jerman
+    "что такое gemini" // Bahasa Rusia
+  ];
 
   // Periksa jika ada kecocokan di template aiResponses
   for (const keyword in aiResponses) {
     if (lowerCasePrompt.includes(keyword)) {
       // Tambahkan delay sebelum memberikan respons template
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 5000));
       return aiResponses[keyword];
     }
+  }
+
+  // Cek apakah prompt mengandung kata kunci tentang Gemini AI
+  if (geminiKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+    // Tambahkan delay 5 detik sebelum memberikan respons
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Respons khusus untuk Gemini AI
+    return "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
   }
 
   // Jika tidak ada kecocokan, kirim prompt ke model AI
@@ -124,7 +135,6 @@ async function getResponse(prompt) {
   await new Promise(resolve => setTimeout(resolve, 5000));
   return text;
 }
-
 // user chat div
 export const userDiv = (data) => {
   return `
