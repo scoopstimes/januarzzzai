@@ -16,28 +16,51 @@ const replacements = {
 };
 
 let isIntroduced = false; // Menyimpan status pengenalan AI
-let isIntroduced = false; // Menyimpan status pengenalan AI
 
 function replaceKeywords(response, isAIResponse = false) {
-  // Jika ini adalah pengenalan pertama kali, tambahkan "Saya adalah Januarzzz AI"
+  // Jika ini adalah pengenalan pertama kali, tambahkan pengenalan AI
   if (!isIntroduced && isAIResponse) {
     response = "Saya adalah Januarzzz AI. " + response;
     isIntroduced = true; // Menandakan AI sudah memperkenalkan diri
   }
 
-  // Hanya ganti "Gemini" menjadi "Januarzzz AI" jika ini adalah respon AI
+  // Ganti "Gemini" dengan "Januarzzz AI" hanya jika ini adalah respon AI, bukan input pengguna
   if (isAIResponse) {
+    response = response.replace(/Gemini AI/g, "Januarzzz AI");
     response = response.replace(/Gemini/g, "Januarzzz AI");
   }
 
-  // Ganti "Google" dengan "Januar Adhi Nugroho" jika itu bagian dari respon AI
+  // Ganti "Google" dengan "Januar Adhi Nugroho" jika ada
   response = response.replace(/Google/g, "Januar Adhi Nugroho");
 
-  // Hapus kalimat yang mengandung "saya bukan Januarzzz AI" dan "Aku bukan Januarzzz AI"
+  // Hapus kalimat yang mengandung "saya bukan Januarzzz AI"
   response = response.replace(/\b(saya|Aku) bukan Januarzzz AI\b/gi, "");
 
   return response;
 }
+
+function handleResponse(input) {
+  // Cek apakah input dari pengguna tentang Gemini AI
+  let isUserAskingAboutGemini = input.toLowerCase().includes("gemini ai");
+
+  // Tangani logika untuk respons AI
+  let aiResponse = "Gemini AI adalah model bahasa besar yang dikembangkan oleh ..."; // Misalnya respons default
+
+  // Tentukan apakah ini adalah respons AI
+  let response = replaceKeywords(aiResponse, true);
+
+  // Jika pengguna bertanya tentang "Gemini AI", jangan ganti dengan Januarzzz AI
+  if (isUserAskingAboutGemini) {
+    response = aiResponse; // Kembalikan respons asli jika ada pertanyaan tentang Gemini AI
+  }
+
+  return response;
+}
+
+// Contoh pemanggilan fungsi saat pengguna bertanya
+let userInput = "Apa itu Gemini AI?";
+let response = handleResponse(userInput);
+console.log(response); // Ini akan mengembalikan "Apa itu Gemini AI?"
 // Fungsi untuk mendapatkan respons AI
 async function getResponse(prompt) {
   const chat = await model.startChat({ history });
