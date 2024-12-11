@@ -208,54 +208,47 @@ async function handleRetry(id) {
   const feedbackDiv = document.getElementById(`feedback-${id}`);
   const responseButtons = document.getElementById(`response-buttons-${id}`);
 
-  // Pastikan elemen ditemukan sebelum lanjut
-  if (!responseTextElement || !feedbackDiv || !responseButtons) {
-    console.error("Elemen tidak ditemukan. Periksa ID elemen.");
-    return;
-  }
-
-  // Sembunyikan tombol respons dan reset area respons
+  // Hide the response buttons when retrying
   responseButtons.style.display = "none";
-  responseTextElement.textContent = "";
-  feedbackDiv.innerHTML = "";
 
-  // Ambil prompt terbaru dari history sesuai dengan ID
-  const userPrompt = history.find(entry => entry.id === id)?.parts;
+  responseTextElement.textContent = "";
+
+  // Get the last user prompt from history
+  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
+
   if (!userPrompt) {
-    console.error("Prompt pengguna untuk ID ini tidak ditemukan.");
+    console.error("No user prompt found for retry.");
     return;
   }
 
-  // Panggil fungsi untuk mendapatkan respons dari AI
-  try {
-    const aiResponse = await getResponse(userPrompt);
+  // Fetch the AI's response using the last prompt
+  const aiResponse = await getResponse(userPrompt);
+  await displayWithDelay(responseTextElement, aiResponse, 50);
 
-    // Tampilkan respons AI dengan penundaan
-    await displayWithDelay(responseTextElement, aiResponse, 50);
+  feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
 
-    // Tampilkan pesan sukses
-    feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
-  } catch (error) {
-    console.error("Terjadi kesalahan saat memuat ulang respons:", error);
-    feedbackDiv.innerHTML = "Gagal memuat ulang respons.";
-  }
-
-  // Tampilkan kembali tombol respons
+  // Show the response buttons again
   responseButtons.style.display = "block";
 
-  // Reset tombol suka/tidak suka
+  // Reset the "like" and "dislike" buttons to their initial state
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
-  if (likeButton && dislikeButton) {
-    likeButton.style.display = "inline-block";
-    dislikeButton.style.display = "inline-block";
 
-    likeButton.classList.remove("mdi-thumb-up");
-    likeButton.classList.add("mdi-thumb-up-outline");
-    dislikeButton.classList.remove("mdi-thumb-down");
-    dislikeButton.classList.add("mdi-thumb-down-outline");
-  }
+  // Ensure both buttons are visible and reset their states
+  likeButton.style.display = "inline-block";
+  dislikeButton.style.display = "inline-block";
+
+  likeButton.classList.remove("mdi-thumb-up");
+  likeButton.classList.add("mdi-thumb-up-outline");
+  dislikeButton.classList.remove("mdi-thumb-down");
+  dislikeButton.classList.add("mdi-thumb-down-outline");
+
+  // Reset feedback text
+  feedbackDiv.innerHTML = "";
 }
+
+window.handleRetry = handleRetry;
+
 async function handleSubmit(event) {
   event.preventDefault();
 
