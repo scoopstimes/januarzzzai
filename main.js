@@ -209,10 +209,10 @@ async function handleRetry(id) {
   const feedbackDiv = document.getElementById(`feedback-${id}`);
   const responseButtons = document.getElementById(`response-buttons-${id}`);
 
-  // Hide the response buttons when retrying
+  // Hide the response buttons when retrying (we will show them back later)
   responseButtons.style.display = "none";
 
-  // Clear all the content (including both user and AI messages)
+  // Clear the content in the response area
   responseTextElement.textContent = "";
   feedbackDiv.innerHTML = "";
 
@@ -224,11 +224,12 @@ async function handleRetry(id) {
     return;
   }
 
-  // Remove the latest AI response and user messages (which are the second messages and beyond)
+  // Remove the AI's and user's second message (but leave the first message and its response intact)
   const allMessages = document.querySelectorAll(".message"); // Assuming you have a common class for message elements
   allMessages.forEach(message => {
-    if (message.id !== id) { // Remove messages that are not related to the message we're retrying
-      message.remove();
+    // Check if this message is related to the second message (we use the id to determine this)
+    if (message.id !== id && message.id !== `response-${id}`) {
+      message.remove(); // Remove any message that is not the first one
     }
   });
 
@@ -239,7 +240,7 @@ async function handleRetry(id) {
   // Show the feedback message
   feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
 
-  // Show the response buttons again
+  // Show the response buttons again (buttons will remain visible after this)
   responseButtons.style.display = "block";
 
   // Reset the "like" and "dislike" buttons to their initial state
@@ -260,7 +261,7 @@ async function handleRetry(id) {
 }
 
 window.handleRetry = handleRetry;
-// Tombol Dinamis untuk Kirim dan Hentikan Respons
+
 async function handleSubmit(event) {
   event.preventDefault();
 
