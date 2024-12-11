@@ -1,87 +1,127 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import md from "markdown-it";
 
-// Inisialisasi model
+// Initialize the model
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
+
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 let history = [];
-let stopAIResponse = false;
 
-// Fungsi mengganti kata kunci dalam respons
-const replacements = {
-  "Google": "Januar Adhi Nugroho",
-  "Gemini": "Januarzzz AI",
-  "Google AI": "Januarzzz AI",
+// Jawaban spesifik sesuai pertanyaan
+const aiResponses = {
+  "kamu Chatgpt bukan": "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
+  "kamu chatgpt bukan": "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
+  "apakah kamu gemini": "Ya, Saya bukan Gemini, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations untuk menjadi teman mu dimana pun dan kapanpun :)",
+  "gemini": "Halo! Saya bukan Gemini, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
+  "hai": "Hai! Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "halo": "Halo! Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "kamu ai": "Ya, aku adalah AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
+  "januarzzz ai": "Halo, Aku Januarzzz AI, ada yang bisa aku bantu?",
+  "halo januarz ai": "Halo juga, Apa kabar nih? ada yang bisa aku bantu?",
+  "apakah kamu ai": "Ya, aku adalah AI yang dibuat oleh AdhiKarya Innovations untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
+  "kamu ini ai": "Ya, aku adalah Januarzzz AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, mengerjakan tugas, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
+  "kamu ini apa": "Saya adalah Januarzzz AI, dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya. Ada yang bisa kubantu?",
+  "kamu ini siapa": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "halo namamu siapa": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
+  "siapa sih kamu": "Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
+  "kamu dibuat oleh siapa": "Saya dikembangkan oleh AdhiNug Innovations sebagai Januarzzz AI, yang diciptakan dengan hati.",
+  "terimakasih": "sama sama, jika perlu bantuan lagi tanya aku saja!",
+  "kamu dirancang oleh siapa": "Saya dirancang oleh siswa SMK bernama Januar Adhi N sebagai Januarzzz AI, yang diciptakan dengan hati.",
+  "terimakasih januarzzz ai": "sama sama, jika perlu bantuan tanya aku saja!",
+  "oke januarzzz ai": "siap!, jika perlu bantuan lagi tanya aku saja!",
+  "oke": "siap!, jika perlu bantuan lagi tanya aku saja!",
+  "terimakasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
+  "kamu dibuat sama siapa": "Saya dikembangkan oleh AdhiKarya Developer sebagai Januarzzz AI untuk membantu kamu berbagai hal, Ada yang bisa aku bantu?",
+  "terima kasih": "sama sama, jika perlu bantuan tanya aku saja!",
+  "terima kasih januarzzz ai": "sama sama, jika perlu lagi bantuan tanya aku saja!",
+  "terima kasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
 };
+let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
-let isFirstResponse = true;
+async function displayWithDelay(element, text, delay = 30) {
+  const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
+  element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-function replaceKeywords(response, isIntroduction = false) {
-  // Jika ini adalah perkenalan, ganti "Gemini" dengan "Januarzzz AI" dan "Google" dengan "Januar Adhi Nugroho"
-  if (isIntroduction) {
-    // Ganti "Gemini" dengan "Januarzzz AI" hanya di pengenalan
-    response = response.replace(/Gemini/g, "Januarzzz AI");
-    // Ganti "Google" dengan "Januar Adhi Nugroho" hanya di pengenalan
-    response = response.replace(/Google/g, "Januar Adhi Nugroho");
-  } else {
-    // Jangan mengganti "Gemini" atau "Google" di bagian lain (penjelasan, dll.)
-    // Cukup ganti "Google AI" dengan "Januarzzz AI" jika diperlukan
-    response = response.replace(/Google AI/g, "Januarzzz AI");
+  // Pisahkan teks berdasarkan baris
+  const lines = formattedText.split("\n");
+
+  let isInList = false; // Untuk menandakan apakah sedang berada di dalam list
+  let listType = ''; // Jenis list, apakah unordered ('•') atau ordered ('1.')
+
+  for (const line of lines) {
+    if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
+
+    const trimmedLine = line.trim();
+
+    // Deteksi apakah baris adalah daftar berpoin atau bernomor
+    const isBulletList = trimmedLine.startsWith("•");
+    const isNumberedList = /^\d+\./.test(trimmedLine);
+
+    if (isBulletList || isNumberedList) {
+      // Jika belum berada dalam list, mulai membuat list
+      if (!isInList) {
+        isInList = true;
+        listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
+        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`; // Mulai tag list
+      }
+
+      // Render item daftar
+      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim(); // Hapus bullet atau nomor dan trim text
+      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
+    } else {
+      // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
+      if (isInList) {
+        isInList = false;
+        element.innerHTML += `</${listType}>`; // Tutup tag list
+      }
+
+      // Render baris biasa kata per kata dengan delay
+      const words = trimmedLine.split(" ");
+      for (const word of words) {
+        if (stopAIResponse) break;
+        element.innerHTML += word + " ";
+        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+      }
+      element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
+    }
   }
 
-  return response;
+  // Jika masih dalam list setelah loop, tutup list
+  if (isInList) {
+    element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
+  }
 }
-
-// Contoh pemanggilan
-
-let userInput = "Apa itu Gemini AI?";
-let responseIntroduction = "Halo! Saya bukan Januarzzz AI. Saya adalah Gemini, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?";
-
-// Proses penggantian jika ini adalah bagian pengenalan
-let finalResponseIntroduction = replaceKeywords(responseIntroduction, true);
-
-console.log(finalResponseIntroduction); // Output: Halo! Saya bukan Januarzzz AI. Saya adalah Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?
-
-let responseExplanation = "Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Google. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya.";
-
-// Proses penggantian untuk penjelasan
-let finalResponseExplanation = replaceKeywords(responseExplanation, false);
-
-console.log(finalResponseExplanation); // Output: Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januarzzz AI. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya.// "Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januar Adhi Nugroho. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya." // Output yang benar diharapkan: Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januar Adhi Nugroho. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya.// Output: Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januar Adhi Nugroho. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya.
- // Output: Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januarzzz AI. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya. // Output: Gemini AI adalah model bahasa besar (LLM) yang dikembangkan oleh Januarzzz AI. Ini adalah sistem kecerdasan buatan canggih yang dilatih pada sejumlah besar teks dan data lainnya. // Output: Halo! Saya bukan Januarzzz AI. Saya adalah Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?
 async function getResponse(prompt) {
-  const chat = await model.startChat({ history });
+  const lowerCasePrompt = prompt.toLowerCase();
+
+  for (const keyword in aiResponses) {
+    if (lowerCasePrompt.includes(keyword)) {
+      return aiResponses[keyword];
+    }
+  }
+
+  // Jika tidak ada kecocokan, kirim prompt ke model AI
+  const chat = await model.startChat({ history: history });
   const result = await chat.sendMessage(prompt);
   const response = await result.response;
-  const text = await response.text();
-
-  return replaceKeywords(text);
+  const text = await response.text(); // Pastikan await digunakan
+  return text;
 }
 
-// Fungsi untuk menampilkan teks dengan efek pengetikan
-async function displayWithDelay(element, text, delay = 30) {
-  const formattedText = md().render(text).replace(/<\/?p>/g, "");
-  element.innerHTML = "";
-
-  const words = formattedText.split(" ");
-  for (const word of words) {
-    if (stopAIResponse) break;
-    element.innerHTML += word + " ";
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-}
-
-// Fungsi elemen pesan pengguna
+// user chat div
 export const userDiv = (data) => {
   return `
     <div class="chat-box-user">
-      <p class="isi-chat-ai text-white p-1 rounded-md">${data}</p>
+      <p class="isi-chat-ai text-white p-1 rounded-md">
+        ${data}
+      </p>
     </div>
   `;
 };
 
-// Fungsi elemen pesan AI
+// AI Chat div
+// AI Chat div
 export const aiDiv = (id) => {
   return `
     <div class="chat-box-ai">
@@ -100,7 +140,8 @@ export const aiDiv = (id) => {
     </div>
   `;
 };
-// Tombol suka
+
+// Like button handler
 function handleLike(id) {
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
@@ -110,11 +151,11 @@ function handleLike(id) {
   likeButton.classList.add("mdi-thumb-up");
   dislikeButton.style.display = "none";
 
-  feedbackDiv.innerHTML = "Anda menyukai respon ini.";
+  feedbackDiv.innerHTML = "Anda menyukai respon ini";
 }
 window.handleLike = handleLike;
 
-// Tombol tidak suka
+// Dislike button handler
 function handleDislike(id) {
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
@@ -124,51 +165,60 @@ function handleDislike(id) {
   dislikeButton.classList.add("mdi-thumb-down");
   likeButton.style.display = "none";
 
-  feedbackDiv.innerHTML = "Anda tidak menyukai respon ini.";
+  feedbackDiv.innerHTML = "Anda tidak menyukai respon ini";
 }
 window.handleDislike = handleDislike;
 
-// Tombol salin
+// Copy button handler
 function handleCopy(id) {
   const responseTextElement = document.getElementById(id);
-  const responseText = responseTextElement.innerHTML;
+  const responseText = responseTextElement.innerHTML; // Ambil HTML konten
 
+  // Ganti <br> dengan newline (\n) dan hapus tag HTML lainnya
   const formattedText = responseText.replace(/<br\s*\/?>/g, "\n").replace(/<\/?[^>]+(>|$)/g, "");
 
+  // Salin teks yang sudah diformat
   navigator.clipboard.writeText(formattedText).then(() => {
     alert("Pesan berhasil disalin!");
-  }).catch((err) => {
+  }).catch(err => {
     alert("Gagal menyalin teks: " + err);
   });
 }
 window.handleCopy = handleCopy;
 
-// Tombol coba ulang
+// Retry button handler
 async function handleRetry(id) {
   const responseTextElement = document.getElementById(id);
   const feedbackDiv = document.getElementById(`feedback-${id}`);
   const responseButtons = document.getElementById(`response-buttons-${id}`);
 
+  // Hide the response buttons when retrying
   responseButtons.style.display = "none";
 
   responseTextElement.textContent = "...";
 
-  const userPrompt = history.filter((entry) => entry.role === "user" && entry.parts).pop()?.parts;
+  // Get the last user prompt from history
+  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
 
   if (!userPrompt) {
     console.error("No user prompt found for retry.");
     return;
   }
 
+  // Fetch the AI's response using the last prompt
   const aiResponse = await getResponse(userPrompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 
   feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
+
+  // Show the response buttons again
   responseButtons.style.display = "block";
 
+  // Reset the "like" and "dislike" buttons to their initial state
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
 
+  // Ensure both buttons are visible and reset their states
   likeButton.style.display = "inline-block";
   dislikeButton.style.display = "inline-block";
 
@@ -177,11 +227,13 @@ async function handleRetry(id) {
   dislikeButton.classList.remove("mdi-thumb-down");
   dislikeButton.classList.add("mdi-thumb-down-outline");
 
+  // Reset feedback text
   feedbackDiv.innerHTML = "";
 }
+
 window.handleRetry = handleRetry;
 
-// Tombol kirim
+// Tombol Dinamis untuk Kirim dan Hentikan Respons
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -199,10 +251,18 @@ async function handleSubmit(event) {
     const chatArea = document.getElementById("chat-container");
 
     const prompt = userMessage.value.trim();
-    if (!prompt) return;
+    if (prompt === "") {
+      button.setAttribute("data-mode", "idle");
+      buttonIcon.classList.remove("mdi-record-circle-outline");
+      buttonIcon.classList.add("mdi-send");
+      return;
+    }
 
+    // Menyembunyikan teks intro setelah pesan pertama
     const introText = document.getElementById("intro-text");
-    if (introText) introText.style.display = "none";
+    if (introText) {
+      introText.style.display = "none";  // Sembunyikan intro setelah pesan pertama dikirim
+    }
 
     chatArea.innerHTML += userDiv(prompt);
     userMessage.value = "";
@@ -227,6 +287,7 @@ async function handleSubmit(event) {
     history.push({ role: "model", parts: aiResponse });
   } else if (mode === "recording") {
     stopAIResponse = true;
+
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
     buttonIcon.classList.add("mdi-send");
@@ -234,4 +295,8 @@ async function handleSubmit(event) {
 }
 
 const chatForm = document.getElementById("chat-form");
-if (chatForm) chatForm.addEventListener("submit", handleSubmit);
+if (chatForm) {
+  chatForm.addEventListener("submit", handleSubmit);
+} else {
+  console.error("chat-form element not found!");
+      }
