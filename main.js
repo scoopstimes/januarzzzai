@@ -264,9 +264,6 @@ async function handleRetry(id) {
 
 window.handleRetry = handleRetry;
 
-let stopAIResponse = false;
-let currentAIResponseTask = null;
-
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -275,12 +272,6 @@ async function handleSubmit(event) {
 
   const mode = button.getAttribute("data-mode");
   if (mode === "idle") {
-    // Hentikan task AI sebelumnya (jika ada)
-    if (currentAIResponseTask) {
-      currentAIResponseTask.cancel(); // Batalkan task sebelumnya
-      currentAIResponseTask = null;  // Reset task
-    }
-
     // Reset stopAIResponse setiap kali mengirim pesan baru
     stopAIResponse = false;
 
@@ -302,7 +293,7 @@ async function handleSubmit(event) {
     // Menyembunyikan teks intro setelah pesan pertama
     const introText = document.getElementById("intro-text");
     if (introText) {
-      introText.style.display = "none"; // Sembunyikan intro setelah pesan pertama dikirim
+      introText.style.display = "none";  // Sembunyikan intro setelah pesan pertama dikirim
     }
 
     chatArea.innerHTML += userDiv(prompt);
@@ -312,21 +303,28 @@ async function handleSubmit(event) {
     chatArea.innerHTML += aiDiv(uniqueID);
     chatArea.scrollTop = chatArea.scrollHeight;
 
-    // Mulai respons baru dan simpan task
-    currentAIResponseTask = createAIResponseTask(uniqueID, prompt);
+    // Hentikan respons AI yang sedang berlangsung, jika ada
+    if (typeof stopAIResponse !== 'undefined' && stopAIResponse === true) {
+      stopAIResponse = false;  // Reset jika ada respons yang dihentikan
+    }
+
+    const aiResponse = await getResponse(prompt);
+    const aiResponseElement = document.getElementById(uniqueID);
+
+    await displayWithDelay(aiResponseElement, aiResponse, 30);
+
+    const responseButtons = document.getElementById(`response-buttons-${uniqueID}`);
+    responseButtons.style.display = "block";
 
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
     buttonIcon.classList.add("mdi-send-circle-outline");
-  } else if (mode === "recording") {
-    // Hentikan respons AI yang sedang berlangsung
-    stopAIResponse = true;
 
-    // Batalkan task AI saat ini
-    if (currentAIResponseTask) {
-      currentAIResponseTask.cancel();
-      currentAIResponseTask = null;
-    }
+    history.push({ role: "user", parts: prompt });
+    history.push({ role: "model", parts: aiResponse });
+  } else if (mode === "recording") {
+    // Menghentikan respons AI yang sedang berlangsung
+    stopAIResponse = true;
 
     button.setAttribute("data-mode", "idle");
     buttonIcon.classList.remove("mdi-record-circle-outline");
@@ -334,32 +332,6 @@ async function handleSubmit(event) {
   }
 }
 
-function createAIResponseTask(uniqueID, prompt) {
-  let canceled = false;
-
-  const cancel = () => {
-    canceled = true;
-    const aiResponseElement = document.getElementById(uniqueID);
-    if (aiResponseElement) {
-      aiResponseElement.innerHTML = "Respons dihentikan.";
-    }
-  };
-
-  const run = async () => {
-    const aiResponseElement = document.getElementById(uniqueID);
-    const aiResponse = await getResponse(prompt);
-
-    if (!canceled) {
-      await displayWithDelay(aiResponseElement, aiResponse, 30);
-      const responseButtons = document.getElementById(`response-buttons-${uniqueID}`);
-      if (responseButtons) responseButtons.style.display = "block";
-    }
-  };
-
-  run();
-
-  return { cancel };
-}
 const chatForm = document.getElementById("chat-form");
 if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
