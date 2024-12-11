@@ -358,15 +358,24 @@ function createAIResponseTask(uniqueID, prompt) {
   return { cancel };
 }
 
-async function displayWithDelay(element, text, delay) {
-  element.innerHTML = ""; // Bersihkan elemen sebelum menampilkan teks
-  for (let i = 0; i < text.length; i++) {
-    if (stopAIResponse) return; // Hentikan jika `stopAIResponse` diatur
-    element.innerHTML += text[i];
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-}
+async function displayWithDelay(element, text, delay = 10) {
+    // Kosongkan elemen sebelumnya
+    element.innerHTML = "";
 
+    // Pecah teks menjadi array huruf
+    const letters = text.split("");
+
+    // Tambahkan span untuk setiap huruf agar bisa dianimasikan
+    letters.forEach((char, index) => {
+        const span = document.createElement("span");
+        span.textContent = char;
+        span.style.opacity = "0"; // Sembunyikan huruf di awal
+        element.appendChild(span);
+        setTimeout(() => {
+            span.style.opacity = "1"; // Tampilkan huruf dengan animasi
+        }, index * delay);
+    });
+}
 const chatForm = document.getElementById("chat-form");
 if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
