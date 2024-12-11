@@ -10,7 +10,8 @@ let history = [];
 
 // Jawaban spesifik sesuai pertanyaan
 const aiResponses = {
-  "siapa namamu kamu": "Nams saya Januarzzz AI",
+  "siapa nama kamu": "Nama saya Januarzzz AI",
+  "siapa namamu": "Nama saya Januarzzz AI",
   "apakah kamu chatgpt": " Saya bukan ChatGPT, Saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
   "kamu Chatgpt bukan": "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
   "kamu chatgpt bukan": "Halo! Saya bukan ChatGPT, tetapi saya adalah Januarzzz AI, asisten berbasis kecerdasan buatan yang dibangun oleh AdhiNug Innovations, Apa yang kamu ingin ketahui?",
