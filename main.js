@@ -15,46 +15,26 @@ const replacements = {
   "Google AI": "Januarzzz AI",
 };
 
-let isFirstResponse = true; // Menandakan apakah ini respons pertama kali
+let isFirstResponse = true;
 
-function replaceKeywords(response, isAIResponse = false) {
-  // Jika ini adalah respons pertama dari AI, tambahkan pengenalan
-  if (isFirstResponse && isAIResponse) {
-    response = "Halo, saya Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. " + response;
-    isFirstResponse = false; // Menandakan respons pertama sudah dikirim
-  }
-
-  // Ganti "Gemini" atau "Gemini AI" dengan "Januarzzz AI" hanya pada respons AI setelah pengenalan
-  if (isAIResponse && !isFirstResponse) {
-    response = response.replace(/Gemini AI/g, "Januarzzz AI");
+function replaceKeywords(response) {
+  // Ganti Gemini dengan Januarzzz AI hanya pada respons pertama
+  if (isFirstResponse) {
     response = response.replace(/Gemini/g, "Januarzzz AI");
+    isFirstResponse = false; // Menandakan bahwa respons pertama sudah dikirim
   }
 
-  // Ganti "Google" dengan "Januar Adhi Nugroho" jika ada
+  // Ganti Google dengan Januar Adhi Nugroho di seluruh teks
   response = response.replace(/Google/g, "Januar Adhi Nugroho");
 
   return response;
 }
 
-function handleResponse(input) {
-  // Tangani logika untuk respons AI
-  let aiResponse = "Apa yang bisa saya bantu?"; // Respons default dari AI
-
-  // Tentukan apakah ini adalah respons AI
-  let response = replaceKeywords(aiResponse, true);
-
-  return response;
-}
-
-// Contoh pemanggilan fungsi untuk respons pertama kali
-let userInput = "Halo, siapa kamu?";
-let response = handleResponse(userInput);
-console.log(response); // Ini akan mengembalikan "Halo, saya Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Apa yang bisa saya bantu?"
-
-// Jika sudah bukan respons pertama, AI tidak akan lagi menyebutkan pengenalan diri
-let userInput2 = "Apa itu Gemini AI?";
-let response2 = handleResponse(userInput2);
-console.log(response2); // Ini akan mengembalikan "Apa yang bisa saya bantu?" // Ini akan mengembalikan "Apa itu Gemini AI?"
+// Contoh pemanggilan
+let userInput = "Apa itu Gemini AI?";
+let response = "Gemini adalah model bahasa AI multimodal yang dikembangkan oleh Google.";
+response = replaceKeywords(response);
+console.log(response); // Output: Januarzzz AI adalah model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho.// Ini akan mengembalikan "Apa yang bisa saya bantu?" // Ini akan mengembalikan "Apa itu Gemini AI?"
 // Fungsi untuk mendapatkan respons AI
 async function getResponse(prompt) {
   const chat = await model.startChat({ history });
