@@ -33,7 +33,6 @@ const aiResponses = {
   "kamu dirancang oleh siapa": "Saya dirancang oleh siswa SMK bernama Januar Adhi N sebagai Januarzzz AI, yang diciptakan dengan hati.",
   "terimakasih januarzzz ai": "sama sama, jika perlu bantuan tanya aku saja!",
   "oke januarzzz ai": "siap!, jika perlu bantuan lagi tanya aku saja!",
-  "oke": "siap!, jika perlu bantuan lagi tanya aku saja!",
   "terimakasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
   "kamu dibuat sama siapa": "Saya dikembangkan oleh AdhiKarya Developer sebagai Januarzzz AI untuk membantu kamu berbagai hal, Ada yang bisa aku bantu?",
   "terima kasih": "sama sama, jika perlu bantuan tanya aku saja!",
