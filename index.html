@@ -49,9 +49,10 @@
         <div style="display: flex; justify-content: center; align-items: center; height: 70px; margin-top: -15px; width: 100%; background: rgba(15, 19, 24, 1);">
           <form action="" method="post" class="form-chat" id="chat-form">
             <input name="prompt" id="prompt" type="text" class="input-chat" placeholder="Ayo bertanya!" />
-            <button id="submit-ai" data-mode="idle" style="margin-left: 0px; margin-top: -15px;">
+            <button id="submit-ai" ontouchstart="addOverlay(event)" ontouchend="removeOverlay(event)" ontouchcancel="removeOverlay(event)" data-mode="idle" style="margin-left: 0px; margin-top: -15px;">
               <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 0px 30px 30px 0px; height: 50px; background: #1e1e2eeb;">
                 <span class="mdi mdi-send" id="button-icon" style="font-size: 30px; margin-left: -15px;"></span>
+                                <div class="overlay" style="width: 50px;height: 50px;margin-left: 84%;margin-top: 4px;border-radius: 50%;">
               </div>
             </button>
           </form>
@@ -103,6 +104,35 @@ function goToLink(websiteURL) {
       window.location.href = websiteURL;
 
 }
+      function addOverlay(event) {
+  var overlay = event.currentTarget.querySelector('.overlay');
+  overlay.classList.add('active');
+}
+
+function removeOverlay(event) {
+  var overlay = event.currentTarget.querySelector('.overlay');
+  overlay.classList.remove('active');
+}
+
+function addOverlaychannel(event) {
+  var overlaychannel = event.currentTarget.querySelector('.overlaychannel');
+  overlaychannel.classList.add('active');
+}
+
+function removeOverlaychannel(event) {
+  var overlaychannel = event.currentTarget.querySelector('.overlaychannel');
+  overlaychannel.classList.remove('active');
+}
+function addOverlayNavbar(event) {
+  var overlayNavbar = event.currentTarget.querySelector('.overlay-navbar');
+  overlayNavbar.classList.add('active');
+}
+
+function removeOverlayNavbar(event) {
+  var overlayNavbar = event.currentTarget.querySelector('.overlay-navbar');
+  overlayNavbar.classList.remove('active');
+}
+      
     </script>
     <script type="module" src="/main.js"></script>
   </body>
