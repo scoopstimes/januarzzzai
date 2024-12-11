@@ -39,35 +39,17 @@ const aiResponses = {
   "terima kasih januarzzz ai": "sama sama, jika perlu lagi bantuan tanya aku saja!",
   "terima kasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
 };
-let stopAIResponse = false; // Flag untuk menghentikan respons AI
-
+let stopAIResponse = false; 
+// Flag untuk menghentikan respons AI
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Tambahkan loading dots
-  const dots = document.createElement("div");
-  dots.className = "loading-dots";
-  dots.style.display = "flex";
-  dots.style.alignItems = "center";
-  dots.style.gap = "5px";
-  dots.innerHTML = `
-    <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite;"></span>
-    <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.2s;"></span>
-    <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.4s;"></span>
-  `;
-  element.appendChild(dots); // Tampilkan dots dalam elemen
-
-  // Tunggu beberapa saat untuk loading animasi
-  await new Promise((resolve) => setTimeout(resolve, 1500)); // Sesuaikan waktu tunggu jika perlu
-
-  // Hapus dots dan mulai menampilkan teks
-  element.removeChild(dots);
-
   // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
+
   let isInList = false; // Untuk menandakan apakah sedang berada di dalam list
-  let listType = ""; // Jenis list, apakah unordered ('•') atau ordered ('1.')
+  let listType = ''; // Jenis list, apakah unordered ('•') atau ordered ('1.')
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
@@ -79,34 +61,40 @@ async function displayWithDelay(element, text, delay = 30) {
     const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
+      // Jika belum berada dalam list, mulai membuat list
       if (!isInList) {
         isInList = true;
-        listType = isBulletList ? "ul" : "ol";
-        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`;
-      }
-      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim();
-      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`;
-    } else {
-      if (isInList) {
-        isInList = false;
-        element.innerHTML += `</${listType}>`;
+        listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
+        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`; // Mulai tag list
       }
 
+      // Render item daftar
+      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim(); // Hapus bullet atau nomor dan trim text
+      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
+    } else {
+      // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
+      if (isInList) {
+        isInList = false;
+        element.innerHTML += `</${listType}>`; // Tutup tag list
+      }
+
+      // Render baris biasa kata per kata dengan delay
       const words = trimmedLine.split(" ");
       for (const word of words) {
         if (stopAIResponse) break;
         element.innerHTML += word + " ";
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
       }
-      element.innerHTML += "<br>";
+      element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
     }
   }
 
+  // Jika masih dalam list setelah loop, tutup list
   if (isInList) {
-    element.innerHTML += `</${listType}>`;
+    element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
   }
-      }
-    
+}
+
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
