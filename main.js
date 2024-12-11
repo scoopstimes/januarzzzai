@@ -303,6 +303,11 @@ async function handleSubmit(event) {
     chatArea.innerHTML += aiDiv(uniqueID);
     chatArea.scrollTop = chatArea.scrollHeight;
 
+    // Hentikan respons AI yang sedang berlangsung, jika ada
+    if (typeof stopAIResponse !== 'undefined' && stopAIResponse === true) {
+      stopAIResponse = false;  // Reset jika ada respons yang dihentikan
+    }
+
     const aiResponse = await getResponse(prompt);
     const aiResponseElement = document.getElementById(uniqueID);
 
@@ -325,4 +330,11 @@ async function handleSubmit(event) {
     buttonIcon.classList.remove("mdi-record-circle-outline");
     buttonIcon.classList.add("mdi-send-circle-outline");
   }
+}
+
+const chatForm = document.getElementById("chat-form");
+if (chatForm) {
+  chatForm.addEventListener("submit", handleSubmit);
+} else {
+  console.error("chat-form element not found!");
 }
