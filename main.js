@@ -107,6 +107,8 @@ async function getResponse(prompt) {
   // Periksa jika ada kecocokan di template aiResponses
   for (const keyword in aiResponses) {
     if (lowerCasePrompt.includes(keyword)) {
+      // Tambahkan delay sebelum memberikan respons template
+      await new Promise(resolve => setTimeout(resolve, 5000));
       return aiResponses[keyword];
     }
   }
@@ -116,6 +118,9 @@ async function getResponse(prompt) {
   const result = await chat.sendMessage(prompt);
   const response = await result.response;
   const text = await response.text(); // Pastikan await digunakan
+
+  // Tambahkan delay sebelum memberikan respons dari model AI
+  await new Promise(resolve => setTimeout(resolve, 5000));
   return text;
 }
 
