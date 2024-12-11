@@ -215,24 +215,20 @@ async function handleRetry(id) {
   responseTextElement.textContent = "";
   feedbackDiv.innerHTML = "";
 
-  // Get the first user prompt from history (this assumes it's the first message in history)
-  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).shift().parts; // Get the first user's prompt
+  // Get the correct user prompt based on the id
+  const userPromptEntry = history.find(entry => entry.role === "user" && entry.id === id);
+  const userPrompt = userPromptEntry?.parts;
 
   if (!userPrompt) {
     console.error("No user prompt found for retry.");
     return;
   }
 
-  // Remove only the second message and its AI response (not the first one)
-  const allMessages = document.querySelectorAll(".message"); // Assuming you have a common class for message elements
-  allMessages.forEach(message => {
-    // Remove messages that are not related to the first user message
-    if (message.id !== id && !message.id.startsWith("response-" + id)) {
-      message.remove();
-    }
-  });
+  // Remove only the response related to this specific ID
+  const responseMessage = document.querySelector(`#response-${id}`);
+  if (responseMessage) responseMessage.remove();
 
-  // Fetch the AI's response based on the first user prompt
+  // Fetch the AI's response based on the correct user prompt
   const aiResponse = await getResponse(userPrompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 
