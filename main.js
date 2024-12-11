@@ -22,8 +22,8 @@ function replaceKeywords(response) {
   // Ganti semua referensi ke "Gemini" dengan "Januarzzz AI"
   modifiedResponse = modifiedResponse.replace(/Gemini/g, "Januarzzz AI");
 
-  // Hapus kalimat yang mengandung "Aku bukan Januarzzz AI"
-  modifiedResponse = modifiedResponse.replace(/\bAku bukan Januarzzz AI\b/gi, "");
+  // Hapus kalimat yang mengandung "saya bukan Januarzzz AI" dan "Aku bukan Januarzzz AI"
+  modifiedResponse = modifiedResponse.replace(/\b(saya|Aku) bukan Januarzzz AI\b/gi, "");
 
   // Pastikan hanya ada satu "Saya adalah Januarzzz AI"
   if (!/Saya adalah Januarzzz AI\./i.test(modifiedResponse)) {
