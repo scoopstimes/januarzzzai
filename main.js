@@ -213,25 +213,26 @@ async function handleRetry(id) {
   responseButtons.style.display = "none";
 
   // Clear all the content (including both user and AI messages)
-  responseTextElement.textContent = "";  
+  responseTextElement.textContent = "";
   feedbackDiv.innerHTML = "";
 
-  // Get the last user prompt from history
-  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
+  // Get the first user prompt from history (this assumes it's the first message in history)
+  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).shift().parts; // Get the first user's prompt
 
   if (!userPrompt) {
     console.error("No user prompt found for retry.");
     return;
   }
 
-  // Remove any old messages from the DOM, including AI and user messages
-  const oldUserMessage = document.getElementById(`user-message-${id}`);
-  const oldAiMessage = document.getElementById(`ai-message-${id}`);
-  
-  if (oldUserMessage) oldUserMessage.remove();
-  if (oldAiMessage) oldAiMessage.remove();
+  // Remove the latest AI response and user messages (which are the second messages and beyond)
+  const allMessages = document.querySelectorAll(".message"); // Assuming you have a common class for message elements
+  allMessages.forEach(message => {
+    if (message.id !== id) { // Remove messages that are not related to the message we're retrying
+      message.remove();
+    }
+  });
 
-  // Fetch the AI's response using the last prompt
+  // Fetch the AI's response based on the first prompt (user's first message)
   const aiResponse = await getResponse(userPrompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 
