@@ -95,8 +95,9 @@ async function displayWithDelay(element, text, delay = 30) {
 }
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
+  const language = await detectLanguage(prompt);
 
-  // Kata kunci untuk mendeteksi pertanyaan tentang Gemini AI dalam berbagai bahasa
+  // Kata kunci tentang Gemini AI
   const geminiKeywords = [
     "gemini ai",       // Bahasa Indonesia / Inggris
     "apa itu gemini",  // Bahasa Indonesia
@@ -107,24 +108,30 @@ async function getResponse(prompt) {
     "что такое gemini" // Bahasa Rusia
   ];
 
-  // Periksa jika ada kecocokan di template aiResponses
+  // Cek apakah prompt mengandung kata kunci tentang Gemini AI
+  if (geminiKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+    await new Promise(resolve => setTimeout(resolve, 5000)); // Tambahkan delay
+    const geminiResponse = 
+      "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
+
+    // Terjemahkan respons tentang Gemini jika bahasa Inggris
+    return await translateResponse(geminiResponse, language);
+  }
+
+  // Cari respons dalam aiResponses
   for (const keyword in aiResponses) {
     if (lowerCasePrompt.includes(keyword)) {
-      // Tambahkan delay sebelum memberikan respons template
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      return aiResponses[keyword];
+      const response = aiResponses[keyword];
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Tambahkan delay
+      return await translateResponse(response, language); // Terjemahkan jika perlu
     }
   }
 
-  // Cek apakah prompt mengandung kata kunci tentang Gemini AI
-  if (geminiKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
-    // Tambahkan delay 5 detik sebelum memberikan respons
-    await new Promise(resolve => setTimeout(resolve, 5000));
-
-    // Respons khusus untuk Gemini AI
-    return "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
-  }
-
+  // Respons default jika tidak ditemukan
+  return language === "en"
+    ? "I'm sorry, I couldn't understand your question. Can you try asking again?"
+    : "Maaf, saya tidak mengerti pertanyaanmu. Bisakah kamu coba bertanya lagi?";
+}
   // Jika tidak ada kecocokan, kirim prompt ke model AI
   const chat = await model.startChat({ history: history });
   const result = await chat.sendMessage(prompt);
