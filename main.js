@@ -17,11 +17,10 @@ const replacements = {
 
 let isFirstResponse = true;
 
-function replaceKeywords(response) {
-  // Ganti Gemini dengan Januarzzz AI hanya pada respons pertama
-  if (isFirstResponse) {
+ function replaceKeywords(response) {
+  // Hanya ganti "Gemini" dengan "Januarzzz AI" di bagian pengenalan diri
+  if (response.includes("Gemini")) {
     response = response.replace(/Gemini/g, "Januarzzz AI");
-    isFirstResponse = false; // Menandakan bahwa respons pertama sudah dikirim
   }
 
   // Ganti Google dengan Januar Adhi Nugroho di seluruh teks
@@ -32,10 +31,11 @@ function replaceKeywords(response) {
 
 // Contoh pemanggilan
 let userInput = "Apa itu Gemini AI?";
-let response = "Gemini adalah model bahasa AI multimodal yang dikembangkan oleh Google.";
+let response = "Halo! Saya bukan Januarzzz AI. Saya adalah Gemini, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?";
+
+// Proses penggantian
 response = replaceKeywords(response);
-console.log(response); // Output: Januarzzz AI adalah model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho.// Ini akan mengembalikan "Apa yang bisa saya bantu?" // Ini akan mengembalikan "Apa itu Gemini AI?"
-// Fungsi untuk mendapatkan respons AI
+console.log(response); // Output: Halo! Saya bukan Januarzzz AI. Saya adalah Januarzzz AI, model bahasa AI multimodal yang dikembangkan oleh Januar Adhi Nugroho. Saya dirancang untuk menjadi informatif dan membantu, dan saya selalu belajar hal-hal baru. Apakah ada yang bisa saya bantu hari ini?
 async function getResponse(prompt) {
   const chat = await model.startChat({ history });
   const result = await chat.sendMessage(prompt);
