@@ -208,54 +208,54 @@ async function handleRetry(id) {
   const feedbackDiv = document.getElementById(`feedback-${id}`);
   const responseButtons = document.getElementById(`response-buttons-${id}`);
 
-  // Hide the response buttons when retrying (we will show them back later)
-  responseButtons.style.display = "none";
-
-  // Clear the content in the response area
-  responseTextElement.textContent = "";
-  feedbackDiv.innerHTML = "";
-
-  // Get the correct user prompt based on the id
-  const userPromptEntry = history.find(entry => entry.role === "user" && entry.id === id);
-  const userPrompt = userPromptEntry?.parts;
-
-  if (!userPrompt) {
-    console.error("No user prompt found for retry.");
+  // Pastikan elemen ditemukan sebelum lanjut
+  if (!responseTextElement || !feedbackDiv || !responseButtons) {
+    console.error("Elemen tidak ditemukan. Periksa ID elemen.");
     return;
   }
 
-  // Remove only the response related to this specific ID
-  const responseMessage = document.querySelector(`#response-${id}`);
-  if (responseMessage) responseMessage.remove();
+  // Sembunyikan tombol respons dan reset area respons
+  responseButtons.style.display = "none";
+  responseTextElement.textContent = "";
+  feedbackDiv.innerHTML = "";
 
-  // Fetch the AI's response based on the correct user prompt
-  const aiResponse = await getResponse(userPrompt);
-  await displayWithDelay(responseTextElement, aiResponse, 50);
+  // Ambil prompt terbaru dari history sesuai dengan ID
+  const userPrompt = history.find(entry => entry.id === id)?.parts;
+  if (!userPrompt) {
+    console.error("Prompt pengguna untuk ID ini tidak ditemukan.");
+    return;
+  }
 
-  // Show the feedback message
-  feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
+  // Panggil fungsi untuk mendapatkan respons dari AI
+  try {
+    const aiResponse = await getResponse(userPrompt);
 
-  // Show the response buttons again (buttons will remain visible after this)
+    // Tampilkan respons AI dengan penundaan
+    await displayWithDelay(responseTextElement, aiResponse, 50);
+
+    // Tampilkan pesan sukses
+    feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
+  } catch (error) {
+    console.error("Terjadi kesalahan saat memuat ulang respons:", error);
+    feedbackDiv.innerHTML = "Gagal memuat ulang respons.";
+  }
+
+  // Tampilkan kembali tombol respons
   responseButtons.style.display = "block";
 
-  // Reset the "like" and "dislike" buttons to their initial state
+  // Reset tombol suka/tidak suka
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
+  if (likeButton && dislikeButton) {
+    likeButton.style.display = "inline-block";
+    dislikeButton.style.display = "inline-block";
 
-  // Ensure both buttons are visible and reset their states
-  likeButton.style.display = "inline-block";
-  dislikeButton.style.display = "inline-block";
-
-  likeButton.classList.remove("mdi-thumb-up");
-  likeButton.classList.add("mdi-thumb-up-outline");
-  dislikeButton.classList.remove("mdi-thumb-down");
-  dislikeButton.classList.add("mdi-thumb-down-outline");
-
-  // Reset feedback text
-  feedbackDiv.innerHTML = "";
+    likeButton.classList.remove("mdi-thumb-up");
+    likeButton.classList.add("mdi-thumb-up-outline");
+    dislikeButton.classList.remove("mdi-thumb-down");
+    dislikeButton.classList.add("mdi-thumb-down-outline");
+  }
 }
-
-window.handleRetry = handleRetry;
 async function handleSubmit(event) {
   event.preventDefault();
 
