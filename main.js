@@ -208,11 +208,13 @@ async function handleRetry(id) {
   const responseTextElement = document.getElementById(id);
   const feedbackDiv = document.getElementById(`feedback-${id}`);
   const responseButtons = document.getElementById(`response-buttons-${id}`);
-
+  
   // Hide the response buttons when retrying
   responseButtons.style.display = "none";
 
-  responseTextElement.textContent = "";
+  // Clear the previous AI response and user prompt
+  responseTextElement.textContent = "";  
+  feedbackDiv.innerHTML = "";
 
   // Get the last user prompt from history
   const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
@@ -222,10 +224,18 @@ async function handleRetry(id) {
     return;
   }
 
+  // Remove any old feedback or responses from previous attempts
+  const oldUserMessage = document.getElementById(`user-message-${id}`);
+  const oldAiMessage = document.getElementById(`ai-message-${id}`);
+  
+  if (oldUserMessage) oldUserMessage.remove();
+  if (oldAiMessage) oldAiMessage.remove();
+
   // Fetch the AI's response using the last prompt
   const aiResponse = await getResponse(userPrompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 
+  // Add the new response and feedback
   feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
 
   // Show the response buttons again
