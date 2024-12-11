@@ -42,30 +42,32 @@ const aiResponses = {
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 30) {
-  const loadingDotsId = `loading-dots-${element.id}`; // ID untuk loading dots
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
+  element.innerHTML = ""; // Kosongkan konten sebelumnya
 
   // Tambahkan loading dots
-  element.innerHTML = `
-    <div id="${loadingDotsId}" class="loading-dots" style="display: flex; align-items: center; gap: 5px;">
-      <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite;"></span>
-      <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.2s;"></span>
-      <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.4s;"></span>
-    </div>
+  const dots = document.createElement("div");
+  dots.className = "loading-dots";
+  dots.style.display = "flex";
+  dots.style.alignItems = "center";
+  dots.style.gap = "5px";
+  dots.innerHTML = `
+    <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite;"></span>
+    <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.2s;"></span>
+    <span class="dot" style="width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: heartbeat 1.5s infinite 0.4s;"></span>
   `;
+  element.appendChild(dots); // Tampilkan dots dalam elemen
 
-  // Tunggu sebelum mulai menampilkan teks
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Tunggu beberapa saat untuk loading animasi
+  await new Promise((resolve) => setTimeout(resolve, 1500)); // Sesuaikan waktu tunggu jika perlu
 
-  // Ganti loading dots dengan teks yang dianimasikan
-  document.getElementById(loadingDotsId).remove();
-  element.innerHTML = ""; // Kosongkan elemen sebelumnya
+  // Hapus dots dan mulai menampilkan teks
+  element.removeChild(dots);
 
   // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
-
   let isInList = false; // Untuk menandakan apakah sedang berada di dalam list
-  let listType = ''; // Jenis list, apakah unordered ('•') atau ordered ('1.')
+  let listType = ""; // Jenis list, apakah unordered ('•') atau ordered ('1.')
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
@@ -77,39 +79,34 @@ async function displayWithDelay(element, text, delay = 30) {
     const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
-      // Jika belum berada dalam list, mulai membuat list
       if (!isInList) {
         isInList = true;
-        listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
-        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`; // Mulai tag list
+        listType = isBulletList ? "ul" : "ol";
+        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`;
       }
-
-      // Render item daftar
-      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim(); // Hapus bullet atau nomor dan trim text
-      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
+      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim();
+      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`;
     } else {
-      // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
       if (isInList) {
         isInList = false;
-        element.innerHTML += `</${listType}>`; // Tutup tag list
+        element.innerHTML += `</${listType}>`;
       }
 
-      // Render baris biasa kata per kata dengan delay
       const words = trimmedLine.split(" ");
       for (const word of words) {
         if (stopAIResponse) break;
         element.innerHTML += word + " ";
-        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
-      element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
+      element.innerHTML += "<br>";
     }
   }
 
-  // Jika masih dalam list setelah loop, tutup list
   if (isInList) {
-    element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
+    element.innerHTML += `</${listType}>`;
   }
-    }
+      }
+    
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
