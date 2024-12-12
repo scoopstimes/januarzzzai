@@ -41,7 +41,52 @@ const aiResponses = {
 };
 
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
+// Menambahkan fungsi untuk microphone
+let recognition;
+let isRecording = false; // Flag untuk memeriksa apakah sedang merekam suara
 
+// Membuat instance SpeechRecognition
+if ('webkitSpeechRecognition' in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = false; // Tidak terus-menerus
+  recognition.interimResults = false; // Tidak mengambil hasil sementara
+  recognition.lang = 'id-ID'; // Atur bahasa ke Indonesia
+
+  // Ketika hasil dikenali
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript; // Ambil teks yang dikenali
+    document.getElementById("prompt").value = transcript; // Isi input dengan teks yang dikenali
+    handleSubmit(new Event("submit")); // Kirimkan teks ke AI
+  };
+
+  // Ketika terjadi kesalahan
+  recognition.onerror = function(event) {
+    console.error("Speech Recognition Error", event.error);
+  };
+}
+
+// Fungsi untuk memulai atau menghentikan perekaman suara
+function toggleRecording() {
+  const button = document.getElementById("recording-ai");
+  const buttonIcon = document.getElementById("button-icon");
+
+  if (isRecording) {
+    // Jika sudah merekam, hentikan perekaman
+    recognition.stop();
+    buttonIcon.classList.remove("mdi-stop-circle-outline");
+    buttonIcon.classList.add("mdi-microphone-outline");
+  } else {
+    // Jika belum merekam, mulai perekaman
+    recognition.start();
+    buttonIcon.classList.remove("mdi-microphone-outline");
+    buttonIcon.classList.add("mdi-stop-circle-outline");
+  }
+
+  isRecording = !isRecording; // Toggle status perekaman
+}
+
+// Menambahkan event listener pada tombol mikrofon
+document.getElementById("recording-ai").addEventListener("click", toggleRecording);
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
