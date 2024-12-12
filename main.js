@@ -41,113 +41,7 @@ const aiResponses = {
 };
 
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
-//  listener pada tombol mikrofon
-let isRecording = false;
-let mediaRecorder;
-let audioChunks = [];
 
-const startRecording = () => {
-  // Meminta izin untuk menggunakan mikrofon
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      mediaRecorder = new MediaRecorder(stream);
-      
-      // Menyimpan potongan audio
-      mediaRecorder.ondataavailable = event => {
-        audioChunks.push(event.data);
-      };
-
-      // Saat perekaman berhenti, proses audio menjadi file
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-
-        // Kirim hasil rekaman untuk pengenalan suara
-        transcribeAudio(audioBlob);
-      };
-
-      // Mulai perekaman
-      mediaRecorder.start();
-      isRecording = true;
-      changeButtonToStop();
-    })
-    .catch(err => {
-      console.error("Gagal mengakses mikrofon: ", err);
-    });
-};
-
-const stopRecording = () => {
-  if (mediaRecorder && isRecording) {
-    mediaRecorder.stop();
-    isRecording = false;
-    changeButtonToStart();
-  }
-};
-
-// Mengubah ikon tombol berdasarkan status perekaman
-const changeButtonToStop = () => {
-  const buttonIcon = document.getElementById("button-icon");
-  const button = document.getElementById("recording-ai");
-  
-  button.setAttribute("data-mode", "recording");
-  buttonIcon.classList.remove("mdi-microphone-outline");
-  buttonIcon.classList.add("mdi-stop-circle-outline");
-};
-
-const changeButtonToStart = () => {
-  const buttonIcon = document.getElementById("button-icon");
-  const button = document.getElementById("recording-ai");
-
-  button.setAttribute("data-mode", "idle");
-  buttonIcon.classList.remove("mdi-stop-circle-outline");
-  buttonIcon.classList.add("mdi-microphone-outline");
-};
-
-// Fungsi untuk mentranskripsikan audio menjadi teks menggunakan API Speech Recognition
-const transcribeAudio = (audioBlob) => {
-  // Ini adalah implementasi menggunakan API SpeechRecognition atau mengirim audio ke server untuk transkripsi
-  const formData = new FormData();
-  formData.append('audio', audioBlob);
-
-  // Simulasi API pengenalan suara, bisa diganti dengan backend yang memproses audio
-  fetch('/transcribe', {
-    method: 'POST',
-    body: formData
-  })
-    .then(response => response.json())
-    .then(data => {
-      const transcript = data.transcript;  // Asumsi server mengembalikan teks transkripsi
-      sendMessageToAI(transcript);
-    })
-    .catch(error => {
-      console.error("Error during transcription:", error);
-    });
-};
-
-const sendMessageToAI = (transcript) => {
-  // Mengirim teks yang ditranskripsikan ke AI
-  const chatArea = document.getElementById("chat-container");
-  chatArea.innerHTML += userDiv(transcript);  // Menampilkan pesan pengguna
-  
-  const uniqueID = `ai-response-${Date.now()}`;
-  chatArea.innerHTML += aiDiv(uniqueID);
-  chatArea.scrollTop = chatArea.scrollHeight;
-  
-  getResponse(transcript).then(aiResponse => {
-    const aiResponseElement = document.getElementById(uniqueID);
-    displayWithDelay(aiResponseElement, aiResponse, 30);
-  });
-};
-
-// Event listener untuk tombol mikrofon
-const micButton = document.getElementById("recording-ai");
-micButton.addEventListener("click", () => {
-  if (isRecording) {
-    stopRecording();  // Stop recording jika sedang merekam
-  } else {
-    startRecording(); // Mulai merekam jika belum mulai
-  }
-});
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
@@ -429,4 +323,4 @@ if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
 } else {
   console.error("chat-form element not found!");
-    }
+          }
