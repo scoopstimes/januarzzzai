@@ -46,18 +46,25 @@
 
       <!-- Chat Input -->
       <div class="chat-input" style="display: flex; width: 100%; margin-top: 20px; position: fixed; margin-left: -15px; justify-content: center; align-items: center; background: rgba(15, 19, 24, 1); height: 70px; bottom: 0; right: 0">
-        <div style="display: flex; justify-content: center; align-items: center; height: 70px; margin-top: -15px; width: 100%; background: rgba(15, 19, 24, 1);">
-          <form action="" method="post" class="form-chat" id="chat-form">
-            <input name="prompt" id="prompt" type="text" class="input-chat" placeholder="Ayo bertanya!" />
-            <button id="submit-ai" ontouchstart="addOverlay(event)" ontouchend="removeOverlay(event)" ontouchcancel="removeOverlay(event)" data-mode="idle" style="margin-left: 0px; margin-top: -15px;">
-              <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 0px 30px 30px 0px; height: 50px; background: #1e1e2eeb; position: relative;">
-                <span class="mdi mdi-send-circle-outline" id="button-icon" style="z-index: 999999999; font-size: 40px; margin-left: -15px;"></span>
-                    <div class="overlay" style="width: 40px;height: 40px;border-radius: 50%; margin-left: -2.3px; margin-top: 4px;">
-             
-              </div>
-            </button>
-          </form>
+  <div style="display: flex; justify-content: center; align-items: center; height: 70px; margin-top: -15px; width: 100%; background: rgba(15, 19, 24, 1);">
+    <form action="" method="post" class="form-chat" id="chat-form" style="display: flex; align-items: center; width: 100%;">
+      <!-- Tombol Voice Input -->
+      <button id="voice-button" type="button" style="background: none; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; margin-right: 10px;">
+        <i id="voice-button-icon" class="mdi mdi-microphone-outline" style="font-size: 30px; color: #ffffff;"></i>
+      </button>
+
+      <!-- Input Chat -->
+      <input name="prompt" id="prompt" type="text" class="input-chat" placeholder="Ayo bertanya!" style="flex: 1; height: 50px; border-radius: 25px; padding: 0 15px; font-size: 14px; border: none; outline: none; background: #1e1e2eeb; color: #ffffff;" />
+
+      <!-- Tombol Kirim -->
+      <button id="submit-ai" ontouchstart="addOverlay(event)" ontouchend="removeOverlay(event)" ontouchcancel="removeOverlay(event)" data-mode="idle" style="margin-left: 10px;">
+        <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 50%; height: 50px; background: #1e1e2eeb; position: relative;">
+          <span class="mdi mdi-send-circle-outline" id="button-icon" style="font-size: 40px;"></span>
+          <div class="overlay" style="width: 40px; height: 40px; border-radius: 50%;"></div>
         </div>
+      </button>
+    </form>
+  </div>
       </div>
     </main>
     <script>
