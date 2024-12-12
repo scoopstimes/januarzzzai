@@ -40,8 +40,10 @@ const aiResponses = {
   "terima kasih januarzz": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
 };
 
-let stopAIResponse = false; // Flag untuk menghentikan respons AI
+
+  let stopAIResponse = false; // Flag untuk menghentikan respons AI
 let isListening = false; // Status input suara
+
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = "id-ID"; // Bahasa Indonesia
 recognition.interimResults = false;
@@ -135,6 +137,7 @@ export const aiDiv = (id) => {
   `;
 };
 
+// Like button handler
 function handleLike(id) {
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
@@ -145,6 +148,7 @@ function handleLike(id) {
 }
 window.handleLike = handleLike;
 
+// Dislike button handler
 function handleDislike(id) {
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
@@ -155,6 +159,7 @@ function handleDislike(id) {
 }
 window.handleDislike = handleDislike;
 
+// Copy button handler
 function handleCopy(id) {
   const responseTextElement = document.getElementById(id);
   const responseText = responseTextElement.innerHTML.replace(/<br\s*\/?>/g, "\n").replace(/<\/?[^>]+(>|$)/g, "");
@@ -162,13 +167,13 @@ function handleCopy(id) {
 }
 window.handleCopy = handleCopy;
 
+// Retry button handler
 async function handleRetry(id) {
   const responseTextElement = document.getElementById(id);
   responseTextElement.textContent = "";
   const aiResponse = await getResponse(prompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
 }
-
 window.handleRetry = handleRetry;
 
 async function handleSubmit(event) {
