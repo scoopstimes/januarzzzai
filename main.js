@@ -41,286 +41,192 @@ const aiResponses = {
 };
 
 let stopAIResponse = false; // Flag untuk menghentikan respons AI
+let isListening = false; // Status input suara
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = "id-ID"; // Bahasa Indonesia
+recognition.interimResults = false;
+recognition.continuous = false;
 
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
 
-  // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
-
   let isInList = false; // Untuk menandakan apakah sedang berada di dalam list
-  let listType = ''; // Jenis list, apakah unordered ('•') atau ordered ('1.')
+  let listType = ""; // Jenis list, apakah unordered ('•') atau ordered ('1.')
 
   for (const line of lines) {
     if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
 
     const trimmedLine = line.trim();
-
-    // Deteksi apakah baris adalah daftar berpoin atau bernomor
     const isBulletList = trimmedLine.startsWith("•");
     const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
-      // Jika belum berada dalam list, mulai membuat list
       if (!isInList) {
         isInList = true;
-        listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
-        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`; // Mulai tag list
+        listType = isBulletList ? "ul" : "ol";
+        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`;
       }
 
-      // Render item daftar
-      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim(); // Hapus bullet atau nomor dan trim text
-      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
+      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim();
+      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`;
     } else {
-      // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
       if (isInList) {
         isInList = false;
-        element.innerHTML += `</${listType}>`; // Tutup tag list
+        element.innerHTML += `</${listType}>`;
       }
 
-      // Render baris biasa kata per kata dengan delay
       const words = trimmedLine.split(" ");
       for (const word of words) {
         if (stopAIResponse) break;
         element.innerHTML += word + " ";
-        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
-      element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
+      element.innerHTML += "<br>";
     }
   }
 
-  // Jika masih dalam list setelah loop, tutup list
   if (isInList) {
-    element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
+    element.innerHTML += `</${listType}>`;
   }
 }
+
 async function getResponse(prompt) {
   const lowerCasePrompt = prompt.toLowerCase();
 
-  // Cek apakah prompt mengandung pertanyaan tentang Gemini AI
   if (lowerCasePrompt.includes("gemini ai") || lowerCasePrompt.includes("apa itu gemini") || lowerCasePrompt.includes("gemini")) {
-    // Tunggu 5 detik sebelum memberikan respons
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Respons khusus untuk Gemini AI
-    return "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google. Model ini memiliki kemampuan pemrosesan bahasa alami yang lebih canggih dan ditujukan untuk meningkatkan interaksi dengan pengguna dengan lebih akurat dan efisien. Gemini AI merupakan bagian dari rangkaian teknologi AI yang lebih besar yang dirancang untuk berbagai aplikasi, dari pencarian hingga analisis data.";
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    return "Gemini AI adalah model kecerdasan buatan yang dikembangkan oleh Google...";
   }
 
-  // Periksa jika ada kecocokan di template aiResponses
-  for (const keyword in aiResponses) {
-    if (lowerCasePrompt.includes(keyword)) {
-      // Tambahkan delay sebelum memberikan respons template
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      return aiResponses[keyword];
-    }
-  }
-
-  // Jika tidak ada kecocokan, kirim prompt ke model AI
   const chat = await model.startChat({ history: history });
   const result = await chat.sendMessage(prompt);
   const response = await result.response;
-  const text = await response.text(); // Pastikan await digunakan
+  const text = await response.text();
 
-  // Tambahkan delay sebelum memberikan respons dari model AI
-  await new Promise(resolve => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   return text;
 }
-// user chat div
+
 export const userDiv = (data) => {
   return `
     <div class="chat-box-user">
-      <p class="isi-chat-ai text-white p-1 rounded-md">
-        ${data}
-      </p>
+      <p class="isi-chat-ai text-white p-1 rounded-md">${data}</p>
     </div>
   `;
 };
 
-// AI Chat div
-// AI Chat div
 export const aiDiv = (id) => {
   return `
     <div class="chat-box-ai">
       <img src="chatbot.png" alt="chat bot icon" />
       <div class="data-chat-ai">
         <p id="${id}" class="text-white"></p>
-        <!-- Buttons for like/dislike, copy, and retry, initially hidden -->
-        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top:0px; gap: 10px;">
-          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" style="font-size: 23px; opacity: 0.7;" onclick="handleLike('${id}')"></button>
-          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleDislike('${id}')"></button>
-          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleCopy('${id}')"></button>
-          <button class="mdi mdi-reload retry-button" id="retry-${id}" style="font-size: 23px; opacity: 0.7; margin-left: 10px;" onclick="handleRetry('${id}')"></button>
+        <div id="response-buttons-${id}" class="response-buttons" style="display: none; margin-top: 0px; gap: 10px;">
+          <button class="mdi mdi-thumb-up-outline like-button" id="like-${id}" onclick="handleLike('${id}')"></button>
+          <button class="mdi mdi-thumb-down-outline dislike-button" id="dislike-${id}" onclick="handleDislike('${id}')"></button>
+          <button class="mdi mdi-content-copy copy-button" id="copy-${id}" onclick="handleCopy('${id}')"></button>
+          <button class="mdi mdi-reload retry-button" id="retry-${id}" onclick="handleRetry('${id}')"></button>
         </div>
-        <div id="feedback-${id}" style="opacity: 0.5;" class="feedback-text"></div>
+        <div id="feedback-${id}" class="feedback-text"></div>
       </div>
     </div>
   `;
 };
 
-// Like button handler
 function handleLike(id) {
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
   const feedbackDiv = document.getElementById(`feedback-${id}`);
-
-  likeButton.classList.remove("mdi-thumb-up-outline");
-  likeButton.classList.add("mdi-thumb-up");
+  likeButton.classList.replace("mdi-thumb-up-outline", "mdi-thumb-up");
   dislikeButton.style.display = "none";
-
   feedbackDiv.innerHTML = "Respon yang Bagus.";
 }
 window.handleLike = handleLike;
 
-// Dislike button handler
 function handleDislike(id) {
   const likeButton = document.getElementById(`like-${id}`);
   const dislikeButton = document.getElementById(`dislike-${id}`);
   const feedbackDiv = document.getElementById(`feedback-${id}`);
-
-  dislikeButton.classList.remove("mdi-thumb-down-outline");
-  dislikeButton.classList.add("mdi-thumb-down");
+  dislikeButton.classList.replace("mdi-thumb-down-outline", "mdi-thumb-down");
   likeButton.style.display = "none";
-
   feedbackDiv.innerHTML = "Respon yang Buruk.";
 }
 window.handleDislike = handleDislike;
 
-// Copy button handler
 function handleCopy(id) {
   const responseTextElement = document.getElementById(id);
-  const responseText = responseTextElement.innerHTML; // Ambil HTML konten
-
-  // Ganti <br> dengan newline (\n) dan hapus tag HTML lainnya
-  const formattedText = responseText.replace(/<br\s*\/?>/g, "\n").replace(/<\/?[^>]+(>|$)/g, "");
-
-  // Salin teks yang sudah diformat
-  navigator.clipboard.writeText(formattedText).then(() => {
-    alert("Berhasil disalin!");
-  }).catch(err => {
-    alert("Gagal menyalin teks: " + err);
-  });
+  const responseText = responseTextElement.innerHTML.replace(/<br\s*\/?>/g, "\n").replace(/<\/?[^>]+(>|$)/g, "");
+  navigator.clipboard.writeText(responseText).then(() => alert("Berhasil disalin!"));
 }
 window.handleCopy = handleCopy;
 
-// Retry button handler
 async function handleRetry(id) {
   const responseTextElement = document.getElementById(id);
-  const feedbackDiv = document.getElementById(`feedback-${id}`);
-  const responseButtons = document.getElementById(`response-buttons-${id}`);
-
-  // Hide the response buttons when retrying
-  responseButtons.style.display = "none";
-
   responseTextElement.textContent = "";
-
-  // Get the last user prompt from history
-  const userPrompt = history.filter(entry => entry.role === "user" && entry.parts).pop().parts; // Get the most recent user's prompt
-
-  if (!userPrompt) {
-    console.error("No user prompt found for retry.");
-    return;
-  }
-
-  // Fetch the AI's response using the last prompt
-  const aiResponse = await getResponse(userPrompt);
+  const aiResponse = await getResponse(prompt);
   await displayWithDelay(responseTextElement, aiResponse, 50);
-
-  feedbackDiv.innerHTML = "Respon telah dimuat ulang.";
-
-  // Show the response buttons again
-  responseButtons.style.display = "block";
-
-  // Reset the "like" and "dislike" buttons to their initial state
-  const likeButton = document.getElementById(`like-${id}`);
-  const dislikeButton = document.getElementById(`dislike-${id}`);
-
-  // Ensure both buttons are visible and reset their states
-  likeButton.style.display = "inline-block";
-  dislikeButton.style.display = "inline-block";
-
-  likeButton.classList.remove("mdi-thumb-up");
-  likeButton.classList.add("mdi-thumb-up-outline");
-  dislikeButton.classList.remove("mdi-thumb-down");
-  dislikeButton.classList.add("mdi-thumb-down-outline");
-
-  // Reset feedback text
-  feedbackDiv.innerHTML = "";
 }
 
 window.handleRetry = handleRetry;
 
 async function handleSubmit(event) {
   event.preventDefault();
+  const prompt = document.getElementById("prompt").value.trim();
+  if (!prompt) return;
 
-  const button = document.getElementById("submit-ai");
-  const buttonIcon = document.getElementById("button-icon");
+  stopAIResponse = false;
 
-  const mode = button.getAttribute("data-mode");
-  if (mode === "idle") {
-    // Reset stopAIResponse setiap kali mengirim pesan baru
-    stopAIResponse = false;
+  const chatArea = document.getElementById("chat-container");
+  chatArea.innerHTML += userDiv(prompt);
 
-    button.setAttribute("data-mode", "recording");
-    buttonIcon.classList.remove("mdi-send-circle-outline");
-    buttonIcon.classList.add("mdi-record-circle-outline");
+  const uniqueID = `ai-response-${Date.now()}`;
+  chatArea.innerHTML += aiDiv(uniqueID);
+  chatArea.scrollTop = chatArea.scrollHeight;
 
-    const userMessage = document.getElementById("prompt");
-    const chatArea = document.getElementById("chat-container");
+  const aiResponse = await getResponse(prompt);
+  const aiResponseElement = document.getElementById(uniqueID);
 
-    const prompt = userMessage.value.trim();
-    if (prompt === "") {
-      button.setAttribute("data-mode", "idle");
-      buttonIcon.classList.remove("mdi-record-circle-outline");
-      buttonIcon.classList.add("mdi-send-circle-outline");
-      return;
-    }
+  await displayWithDelay(aiResponseElement, aiResponse, 30);
+}
 
-    // Menyembunyikan teks intro setelah pesan pertama
-    const introText = document.getElementById("intro-text");
-    if (introText) {
-      introText.style.display = "none";  // Sembunyikan intro setelah pesan pertama dikirim
-    }
+document.getElementById("chat-form").addEventListener("submit", handleSubmit);
 
-    chatArea.innerHTML += userDiv(prompt);
-    userMessage.value = "";
-
-    const uniqueID = `ai-response-${Date.now()}`;
-    chatArea.innerHTML += aiDiv(uniqueID);
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    // Hentikan respons AI yang sedang berlangsung, jika ada
-    if (typeof stopAIResponse !== 'undefined' && stopAIResponse === true) {
-      stopAIResponse = false;  // Reset jika ada respons yang dihentikan
-    }
-
-    const aiResponse = await getResponse(prompt);
-    const aiResponseElement = document.getElementById(uniqueID);
-
-    await displayWithDelay(aiResponseElement, aiResponse, 30);
-
-    const responseButtons = document.getElementById(`response-buttons-${uniqueID}`);
-    responseButtons.style.display = "block";
-
-    button.setAttribute("data-mode", "idle");
-    buttonIcon.classList.remove("mdi-record-circle-outline");
-    buttonIcon.classList.add("mdi-send-circle-outline");
-
-    history.push({ role: "user", parts: prompt });
-    history.push({ role: "model", parts: aiResponse });
-  } else if (mode === "recording") {
-    // Menghentikan respons AI yang sedang berlangsung
-    stopAIResponse = true;
-
-    button.setAttribute("data-mode", "idle");
-    buttonIcon.classList.remove("mdi-record-circle-outline");
-    buttonIcon.classList.add("mdi-send-circle-outline");
+// Voice Input
+function toggleVoiceInput() {
+  const buttonIcon = document.getElementById("voice-button-icon");
+  if (!isListening) {
+    isListening = true;
+    recognition.start();
+    buttonIcon.classList.replace("mdi-microphone-outline", "mdi-microphone");
+  } else {
+    isListening = false;
+    recognition.stop();
+    buttonIcon.classList.replace("mdi-microphone", "mdi-microphone-outline");
   }
 }
 
-const chatForm = document.getElementById("chat-form");
-if (chatForm) {
-  chatForm.addEventListener("submit", handleSubmit);
-} else {
-  console.error("chat-form element not found!");
+recognition.onresult = (event) => {
+  const transcript = event.results[0][0].transcript.trim();
+  document.getElementById("prompt").value = transcript;
+  document.getElementById("chat-form").dispatchEvent(new Event("submit"));
+};
+
+recognition.onerror = (event) => {
+  alert("Terjadi kesalahan: " + event.error);
+  toggleVoiceInput();
+};
+
+export const voiceButton = () => {
+  return `
+    <button id="voice-button" onclick="toggleVoiceInput()" style="background: none; border: none;">
+      <i id="voice-button-icon" class="mdi mdi-microphone-outline"></i>
+    </button>
+  `;
+};
+
+const buttonContainer = document.getElementById("button-container");
+if (buttonContainer) {
+  buttonContainer.innerHTML += voiceButton();
 }
