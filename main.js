@@ -20,7 +20,7 @@ const aiResponses = {
   "hai": "Hai! Saya adalah Neural AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
   "halo": "Halo! Saya adalah Neural AI, asisten berbasis kecerdasan buatan yang dibuat oleh AdhiNug Innovations, kamu bisa menganggapku sebagai teman virtual yang siap membantu kapan saja. Apa yang kamu ingin ketahui?",
   "kamu ai": "Ya, aku adalah AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
-  "januarzzz ai": "Halo, Aku Neural AI, ada yang bisa aku bantu?",
+  "Neural ai": "Halo, Aku Neural AI, ada yang bisa aku bantu?",
   "halo Neural ai": "Halo juga, Apa kabar nih? ada yang bisa aku bantu?",
   "apakah kamu ai": "Ya, aku adalah Neural AI yang dibuat oleh AdhiNug Innovations untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
   "kamu ini ai": "Ya, aku adalah Neural AI yang dirancang untuk membantu kamu dalam berbagai hal, seperti menjawab pertanyaan, mengerjakan tugas, memberikan panduan, atau hal lainnya, Ada yang bisa kubantu?",
