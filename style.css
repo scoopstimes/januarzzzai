@@ -7,7 +7,12 @@
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
 
-
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50%
 .overlay {
         width: 100%;
         height: 100%;
@@ -728,7 +733,7 @@ video {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 90%;
   background: rgba(15, 19, 24, 1);
   height: 60px;
 
@@ -770,11 +775,11 @@ video {
 .input-chat{
   flex-grow: 1;
   height: 50px;
-  border-radius: 0px 0px 0px 0px;
+  border-radius: 30px 0px 0px 30px;
   margin-top: -15px;
   border: none;
   outline: none;
-  width: 70%;
+  width: 80%;
   background: #1e1e2eeb;
   color: white;
   padding: 16px;
@@ -958,4 +963,4 @@ video {
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
-}
+        }
