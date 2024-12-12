@@ -710,11 +710,15 @@ video {
   align-items: center;
   border: 0.5px solid #6e6e6e80;
 }
-.chat-box-user p{
+.chat-box-user p {
   width: auto;
-  
   background: transparent;
   text-align: left;
+
+  /* Tambahkan properti ini */
+  word-wrap: break-word; /* Memaksa teks panjang terpotong di akhir baris */
+  word-break: break-word; /* Kompatibilitas tambahan */
+  overflow-wrap: break-word; /* Versi modern */
 }
 .chat-box-user img{
   width: 45px;
