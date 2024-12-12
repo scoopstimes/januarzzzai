@@ -43,55 +43,53 @@ let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
-  element.innerHTML = ""; // Kosongkan konten sebelumnya
+  if (!element.innerHTML.trim()) element.innerHTML = ""; // Kosongkan hanya jika kosong
 
-  // Pisahkan teks berdasarkan baris
   const lines = formattedText.split("\n");
-
-  let isInList = false; // Untuk menandakan apakah sedang berada di dalam list
-  let listType = ''; // Jenis list, apakah unordered ('•') atau ordered ('1.')
+  let isInList = false;
+  let listType = '';
 
   for (const line of lines) {
-    if (stopAIResponse) break; // Jika dihentikan, keluar dari loop
+    if (stopAIResponse) break;
 
     const trimmedLine = line.trim();
-
-    // Deteksi apakah baris adalah daftar berpoin atau bernomor
     const isBulletList = trimmedLine.startsWith("•");
     const isNumberedList = /^\d+\./.test(trimmedLine);
 
     if (isBulletList || isNumberedList) {
-      // Jika belum berada dalam list, mulai membuat list
       if (!isInList) {
         isInList = true;
-        listType = isBulletList ? 'ul' : 'ol'; // Tentukan tipe list
-        element.innerHTML += `<${listType} style="padding-left: 20px; margin: 0; list-style-position: outside;">`; // Mulai tag list
+        listType = isBulletList ? "ul" : "ol";
+        const list = document.createElement(listType);
+        list.style.paddingLeft = "20px";
+        list.style.margin = "0";
+        list.style.listStylePosition = "outside";
+        element.appendChild(list);
       }
 
-      // Render item daftar
-      const listItem = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim(); // Hapus bullet atau nomor dan trim text
-      element.innerHTML += `<li style="margin-bottom: 8px;">${listItem}</li>`; // Tambahkan item list
+      const listItem = document.createElement("li");
+      listItem.style.marginBottom = "8px";
+      listItem.textContent = trimmedLine.replace(/^[•\d+\.]\s*/, "").trim();
+      element.lastChild.appendChild(listItem);
     } else {
-      // Jika sudah selesai daftar, tutup list dan mulai elemen biasa
       if (isInList) {
         isInList = false;
-        element.innerHTML += `</${listType}>`; // Tutup tag list
       }
 
-      // Render baris biasa kata per kata dengan delay
       const words = trimmedLine.split(" ");
       for (const word of words) {
         if (stopAIResponse) break;
-        element.innerHTML += word + " ";
-        await new Promise((resolve) => setTimeout(resolve, delay)); // Tunggu sesuai delay
+        const span = document.createElement("span");
+        span.textContent = word + " ";
+        element.appendChild(span);
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
-      element.innerHTML += "<br>"; // Tambahkan baris baru setelah selesai
+      element.appendChild(document.createElement("br"));
     }
   }
 
-  // Jika masih dalam list setelah loop, tutup list
   if (isInList) {
-    element.innerHTML += `</${listType}>`; // Tutup tag list jika belum ditutup
+    isInList = false;
   }
 }
 async function getResponse(prompt) {
