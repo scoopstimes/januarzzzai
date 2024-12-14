@@ -25,9 +25,6 @@
           <div style="display: flex; margin-left: auto; gap: 20px; margin-right: 10px;">
           <button onclick="goToWebsite('index.html')"><span class="mdi mdi-pencil-box-outline" style="color: white; font-size: 27px;"></button></a>
             <span class="mdi mdi-information-outline" style="color: white; font-size: 27px;"></span>
-            <label for="file-upload-input">Upload Gambar:</label>
-  <input type="file" id="file-upload-input" accept="image/*">
-        
           </div>
         </div>
       </header>
@@ -51,6 +48,14 @@
       <div class="chat-input" style="display: flex; width: 100%; margin-top: 20px; position: fixed; margin-left: -15px; justify-content: center; align-items: center; background: rgba(15, 19, 24, 1); height: 70px; bottom: 0; right: 0; flex-direction:column;">
         
         <div style="display: flex; justify-content: center; align-items: center; height: 70px; margin-top: -15px; width: 100%; background: rgba(15, 19, 24, 1);">
+            <div class="upload-container">
+    <i class="mdi mdi-upload-circle-outline upload-icon"></i>
+    <h2 class="upload-title">Upload Gambar</h2>
+    <p class="upload-instructions">Pilih gambar dari perangkat Anda.</p>
+    <label for="file-input" class="upload-button">Pilih Gambar</label>
+    <input type="file" id="file-input" accept="image/*">
+    <div class="preview" id="image-preview"></div>
+            </div>
           <form action="" method="post" class="form-chat" id="chat-form">
             <input name="prompt" id="prompt" type="text" class="input-chat" placeholder="Ayo bertanya!" />
             <button id="submit-ai" ontouchstart="addOverlay(event)" ontouchend="removeOverlay(event)" ontouchcancel="removeOverlay(event)" data-mode="idle" style="margin-left: 0px; margin-top: -15px;">
