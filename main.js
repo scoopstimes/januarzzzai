@@ -1,8 +1,10 @@
-import { GoogleGenerativeAI, GoogleAIFileManager } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import md from "markdown-it";
 
-// Inisialisasi Google Generative AI dan File Manager
+// Initialize the model
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
-const fileManager = new GoogleAIFileManager(import.meta.env.VITE_API_KEY);
+
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 let history = [];
 
@@ -38,29 +40,8 @@ const aiResponses = {
   "terima kasih Neuxon": "Sama-sama. Saya senang bisa membantu. Jika kamu memiliki pertanyaan atau membutuhkan bantuan lagi, jangan ragu untuk bertanya.",
 };
 
-let stopAIResponse = false;
+let stopAIResponse = false; // Flag untuk menghentikan respons AI
 
-async function handleFileUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const mimeType = file.type;
-  const path = URL.createObjectURL(file);
-
-  // Upload file ke Gemini
-  const uploadedFile = await uploadToGemini(path, mimeType);
-
-  // Tampilkan pratinjau gambar
-  const imagePreview = document.getElementById("image-preview");
-  const previewImg = document.getElementById("preview-img");
-  previewImg.src = path;
-  imagePreview.style.display = "block";
-
-  console.log(`File berhasil diunggah: ${uploadedFile.displayName}`);
-  return path; // Kembalikan URL gambar untuk ditampilkan di chat
-}
-
-// Flag untuk menghentikan respons AI
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
   element.innerHTML = ""; // Kosongkan konten sebelumnya
@@ -277,6 +258,7 @@ async function handleSubmit(event) {
 
   const mode = button.getAttribute("data-mode");
   if (mode === "idle") {
+    // Reset stopAIResponse setiap kali mengirim pesan baru
     stopAIResponse = false;
 
     button.setAttribute("data-mode", "recording");
@@ -293,23 +275,7 @@ async function handleSubmit(event) {
       buttonIcon.classList.add("mdi-send-circle-outline");
       return;
     }
-const fileInput = document.getElementById("file-upload-input");
-    let uploadedImageURL = "";
-    if (fileInput.files.length > 0) {
-      uploadedImageURL = await handleFileUpload({ target: fileInput });
-    }
 
-    chatArea.innerHTML += userDiv(prompt + (uploadedImageURL ? `<br><img src="${uploadedImageURL}" alt="Uploaded Image" style="max-width: 100px; margin-top: 10px;" />` : ""));
-    userMessage.value = "";
-    fileInput.value = ""; // Reset input file
-
-    const uniqueID = `ai-response-${Date.now()}`;
-    chatArea.innerHTML += aiDiv(uniqueID);
-    chatArea.scrollTop = chatArea.scrollHeight;
-
-    const aiResponse = await getResponse(prompt);
-    const aiResponseElement = document.getElementById(uniqueID);
-    
     // Menyembunyikan teks intro setelah pesan pertama
     const introText = document.getElementById("intro-text");
     if (introText) {
@@ -343,6 +309,7 @@ const fileInput = document.getElementById("file-upload-input");
     history.push({ role: "user", parts: prompt });
     history.push({ role: "model", parts: aiResponse });
   } else if (mode === "recording") {
+    // Menghentikan respons AI yang sedang berlangsung
     stopAIResponse = true;
 
     button.setAttribute("data-mode", "idle");
@@ -356,4 +323,4 @@ if (chatForm) {
   chatForm.addEventListener("submit", handleSubmit);
 } else {
   console.error("chat-form element not found!");
-          }
+}
