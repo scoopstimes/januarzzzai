@@ -50,12 +50,16 @@
       <!-- Chat Input -->
       <div class="chat-input" style="display: flex; width: 100%; margin-top: 20px; position: fixed; margin-left: -15px; justify-content: center; align-items: center; background: rgba(15, 19, 24, 1); height: 70px; bottom: 0; right: 0; flex-direction:column;">
         
-        <div style="display: flex; justify-content: center; align-items: center; height: 70px; margin-top: -15px; width: 100%; background: rgba(15, 19, 24, 1);">
-            <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 0px 30px 30px 0px; height: 50px; background: #1e1e2eeb; position: relative;">
-                <span class="mdi mdi-send-circle-outline" id="button-icon" style="z-index: 999999999; font-size: 40px; margin-left: -15px;"></span>
-                    <div class="overlay" style="width: 40px;height: 40px;border-radius: 50%; margin-left: -2.3px; margin-top: 4px;">
-                    </div>
-            </div>
+        <div style="margin: 20px; display: flex; flex-direction: column; align-items: center;">
+  <label for="upload-input" 
+         style="display: flex; justify-content: center; align-items: center; background: #1e1e2eeb; color: white; font-size: 16px; font-family: 'Quicksand'; padding: 10px 20px; border-radius: 5px; cursor: pointer; gap: 10px;">
+    <span class="mdi mdi-upload-circle-outline" style="font-size: 25px;"></span> Upload Gambar
+  </label>
+  <input type="file" id="upload-input" style="display: none;" accept="image/*" />
+  <div id="image-preview" style="margin-top: 15px; max-width: 90%; max-height: 200px; overflow: hidden; border: 1px solid #333; border-radius: 5px; display: none;">
+    <img id="preview-img" src="" alt="Preview Gambar" style="width: 100%; height: auto; display: block;">
+  </div>
+        </div>
           <form action="" method="post" class="form-chat" id="chat-form">
             <input name="prompt" id="prompt" type="text" class="input-chat" placeholder="Ayo bertanya!" />
             <button id="submit-ai" ontouchstart="addOverlay(event)" ontouchend="removeOverlay(event)" ontouchcancel="removeOverlay(event)" data-mode="idle" style="margin-left: 0px; margin-top: -15px;">
@@ -146,7 +150,23 @@ function removeOverlayNavbar(event) {
   var overlayNavbar = event.currentTarget.querySelector('.overlay-navbar');
   overlayNavbar.classList.remove('active');
 }
-      
+      const uploadInput = document.getElementById("upload-input");
+const imagePreview = document.getElementById("image-preview");
+const previewImg = document.getElementById("preview-img");
+
+uploadInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImg.src = e.target.result;
+      imagePreview.style.display = "block"; // Menampilkan preview
+    };
+    reader.readAsDataURL(file);
+  } else {
+    imagePreview.style.display = "none"; // Sembunyikan jika tidak ada file
+  }
+});
     </script>
     <script type="module" src="/main.js"></script>
   </body>
