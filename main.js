@@ -40,17 +40,6 @@ const aiResponses = {
 
 let stopAIResponse = false;
 
-async function uploadToGemini(path, mimeType) {
-  const uploadResult = await fileManager.uploadFile(path, {
-    mimeType,
-    displayName: path.split('/').pop(), // Hanya ambil nama file
-  });
-  const file = uploadResult.file;
-  console.log(`Uploaded file ${file.displayName} as: ${file.name}`);
-  return file;
-}
-
-// Fungsi untuk menangani upload gambar
 async function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -60,19 +49,16 @@ async function handleFileUpload(event) {
 
   // Upload file ke Gemini
   const uploadedFile = await uploadToGemini(path, mimeType);
-  console.log(`File berhasil diunggah: ${uploadedFile.displayName}`);
 
-  // Tampilkan gambar di halaman
+  // Tampilkan pratinjau gambar
   const imagePreview = document.getElementById("image-preview");
   const previewImg = document.getElementById("preview-img");
   previewImg.src = path;
   imagePreview.style.display = "block";
-}
 
-// Tambahkan listener untuk file input
-document
-  .getElementById("file-upload-input")
-  .addEventListener("change", handleFileUpload);
+  console.log(`File berhasil diunggah: ${uploadedFile.displayName}`);
+  return path; // Kembalikan URL gambar untuk ditampilkan di chat
+}
 
 // Flag untuk menghentikan respons AI
 async function displayWithDelay(element, text, delay = 30) {
@@ -291,7 +277,6 @@ async function handleSubmit(event) {
 
   const mode = button.getAttribute("data-mode");
   if (mode === "idle") {
-    // Reset stopAIResponse setiap kali mengirim pesan baru
     stopAIResponse = false;
 
     button.setAttribute("data-mode", "recording");
@@ -308,7 +293,23 @@ async function handleSubmit(event) {
       buttonIcon.classList.add("mdi-send-circle-outline");
       return;
     }
+const fileInput = document.getElementById("file-upload-input");
+    let uploadedImageURL = "";
+    if (fileInput.files.length > 0) {
+      uploadedImageURL = await handleFileUpload({ target: fileInput });
+    }
 
+    chatArea.innerHTML += userDiv(prompt + (uploadedImageURL ? `<br><img src="${uploadedImageURL}" alt="Uploaded Image" style="max-width: 100px; margin-top: 10px;" />` : ""));
+    userMessage.value = "";
+    fileInput.value = ""; // Reset input file
+
+    const uniqueID = `ai-response-${Date.now()}`;
+    chatArea.innerHTML += aiDiv(uniqueID);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    const aiResponse = await getResponse(prompt);
+    const aiResponseElement = document.getElementById(uniqueID);
+    
     // Menyembunyikan teks intro setelah pesan pertama
     const introText = document.getElementById("intro-text");
     if (introText) {
@@ -342,7 +343,6 @@ async function handleSubmit(event) {
     history.push({ role: "user", parts: prompt });
     history.push({ role: "model", parts: aiResponse });
   } else if (mode === "recording") {
-    // Menghentikan respons AI yang sedang berlangsung
     stopAIResponse = true;
 
     button.setAttribute("data-mode", "idle");
