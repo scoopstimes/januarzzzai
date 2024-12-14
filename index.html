@@ -153,23 +153,7 @@ function removeOverlayNavbar(event) {
   var overlayNavbar = event.currentTarget.querySelector('.overlay-navbar');
   overlayNavbar.classList.remove('active');
 }
-      const uploadInput = document.getElementById("upload-input");
-const imagePreview = document.getElementById("image-preview");
-const previewImg = document.getElementById("preview-img");
-
-uploadInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewImg.src = e.target.result;
-      imagePreview.style.display = "block"; // Menampilkan preview
-    };
-    reader.readAsDataURL(file);
-  } else {
-    imagePreview.style.display = "none"; // Sembunyikan jika tidak ada file
-  }
-});
+      
     </script>
     <script type="module" src="/main.js"></script>
   </body>
