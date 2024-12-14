@@ -11,55 +11,7 @@
     <title>Neuxon AI</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <style>
   
-    .upload-container {
-      text-align: center;
-      background-color: #1e1e1e;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    }
-    .upload-icon {
-      font-size: 50px;
-      color: #2a9df4;
-      margin-bottom: 20px;
-    }
-    .upload-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-    .upload-instructions {
-      font-size: 14px;
-      color: #cccccc;
-      margin-bottom: 20px;
-    }
-    .upload-button {
-      display: inline-block;
-      background-color: #2a9df4;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .upload-button:hover {
-      background-color: #2389c4;
-    }
-    #file-input {
-      display: none;
-    }
-    .preview {
-      margin-top: 20px;
-    }
-    .preview img {
-      max-width: 100%;
-      max-height: 200px;
-      border-radius: 5px;
-      border: 1px solid #333333;
-    }
-  </style>
   <body>
 
     <main class="w-full min-h-[calc(100vh-1rem)] max-h-[calc(100vh-1rem)] flex flex-col main-ai">
@@ -106,13 +58,17 @@
       <div class="chat-input" style="display: flex; width: 100%; margin-top: 20px; position: fixed; margin-left: -15px; justify-content: center; align-items: center; background: rgba(15, 19, 24, 1); height: 70px; bottom: 0; right: 0; flex-direction:column;">
         
         <div style="display: flex; justify-content: center; align-items: center; height: 70px; margin-top: -15px; width: 100%; background: rgba(15, 19, 24, 1);">
-            
+            <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 0px 30px 30px 0px; height: 50px; background: #1e1e2eeb; position: relative;">
+                <span class="mdi mdi-send-circle-outline" id="button-icon" style="z-index: 999999999; font-size: 40px; margin-left: -15px;"></span>
+                    <div class="overlay" style="width: 40px;height: 40px;border-radius: 50%; margin-left: -2.3px; margin-top: 4px;">
+                    </div>
+            </div>
           <form action="" method="post" class="form-chat" id="chat-form">
             <input name="prompt" id="prompt" type="text" class="input-chat" placeholder="Ayo bertanya!" />
             <button id="submit-ai" ontouchstart="addOverlay(event)" ontouchend="removeOverlay(event)" ontouchcancel="removeOverlay(event)" data-mode="idle" style="margin-left: 0px; margin-top: -15px;">
               <div style="display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 0px 30px 30px 0px; height: 50px; background: #1e1e2eeb; position: relative;">
                 <span class="mdi mdi-send-circle-outline" id="button-icon" style="z-index: 999999999; font-size: 40px; margin-left: -15px;"></span>
-                    <div class="overlay" style="width: 40px;height: 40px;border-radius: 50%; margin-left: -2.3px; margin-top: 4px;">
+                    <div class="overlay" style="width: 40px;height: 40px;border-radius: 50%; margin-left: -2.3px; margin-top: 4px;"></div>
              
               </div>
             </button>
