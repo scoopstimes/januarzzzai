@@ -1,9 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import md from "markdown-it";
+import { GoogleGenerativeAI, GoogleAIFileManager } from "@google/generative-ai";
 
 // Inisialisasi Google Generative AI dan File Manager
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const fileManager = new GoogleAIFileManager(import.meta.env.VITE_API_KEY);
 
 let history = [];
 
@@ -40,6 +39,41 @@ const aiResponses = {
 };
 
 let stopAIResponse = false;
+
+async function uploadToGemini(path, mimeType) {
+  const uploadResult = await fileManager.uploadFile(path, {
+    mimeType,
+    displayName: path.split('/').pop(), // Hanya ambil nama file
+  });
+  const file = uploadResult.file;
+  console.log(`Uploaded file ${file.displayName} as: ${file.name}`);
+  return file;
+}
+
+// Fungsi untuk menangani upload gambar
+async function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const mimeType = file.type;
+  const path = URL.createObjectURL(file);
+
+  // Upload file ke Gemini
+  const uploadedFile = await uploadToGemini(path, mimeType);
+  console.log(`File berhasil diunggah: ${uploadedFile.displayName}`);
+
+  // Tampilkan gambar di halaman
+  const imagePreview = document.getElementById("image-preview");
+  const previewImg = document.getElementById("preview-img");
+  previewImg.src = path;
+  imagePreview.style.display = "block";
+}
+
+// Tambahkan listener untuk file input
+document
+  .getElementById("file-upload-input")
+  .addEventListener("change", handleFileUpload);
+
 // Flag untuk menghentikan respons AI
 async function displayWithDelay(element, text, delay = 30) {
   const formattedText = md().render(text).replace(/<\/?p>/g, ""); // Format teks tanpa <p> tag
